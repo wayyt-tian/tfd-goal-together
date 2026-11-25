@@ -71,7 +71,7 @@ class ReleaseTests(unittest.TestCase):
         self.assertNotIn('/home/tian', ' '.join(args))
 
     def test_bad_targets_are_rejected(self):
-        for changes in [{'domain': 'goal.test; touch /tmp/pwn'}, {'user': 'ubuntu\nroot'}, {'root': '/srv'}, {'root': '/srv/../etc'}, {'keep_images': 1}]:
+        for changes in [{'domain': 'goal.test; touch /tmp/pwn'}, {'user': 'ubuntu\nroot'}, {'root': '/srv'}, {'root': '/srv/../etc'}, {'keep_images': 1}, {'alpine_mirror': 'http://mirror.example/alpine'}, {'alpine_mirror': 'https://mirror.example/alpine|x'}, {'alpine_mirror': 'https://user:password@mirror.example/alpine'}]:
             with self.assertRaises((ValueError, KeyError)):
                 release.validate_config(dict(CONFIG, **changes))
 

@@ -98,7 +98,7 @@ def initialize(root, config, source):
         shutil.copy2(source / 'infra/postgres/init.sql', root / 'postgres-init.sql')
 
 
-def verify_source(source, tag, log):
+def verify_source(source, tag, log, build_args=()):
     """独立容器、网络、数据库、随机密码；绝不读取正式 runtime.env。"""
     suffix = secrets.token_hex(5)
     network, pg = 'goal-verify-' + suffix, 'goal-verify-pg-' + suffix
@@ -107,7 +107,7 @@ def verify_source(source, tag, log):
     env = dict(os.environ, POSTGRES_PASSWORD=password)
     try:
         with log.open('w') as output:
-            run(['docker', 'build', '--label', LABEL + '=' + OWNER, '-f', str(ASSETS / 'verify.Dockerfile'), '-t', image, str(source)], stdout=output)
+            run(['docker', 'build', *build_args, '--label', LABEL + '=' + OWNER, '-f', str(ASSETS / 'verify.Dockerfile'), '-t', image, str(source)], stdout=output)
         run(['docker', 'network', 'create', '--label', LABEL + '=' + OWNER, network])
         run(['docker', 'run', '-d', '--name', pg, '--label', LABEL + '=' + OWNER, '--network', network, '--network-alias', 'postgres', '--tmpfs', '/var/lib/postgresql/data', '-e', 'POSTGRES_PASSWORD', '-e', 'POSTGRES_USER=goal_together', '-e', 'POSTGRES_DB=goal_together_test', 'postgres:16-alpine'], env=env)
         for _ in range(60):
@@ -213,10 +213,11 @@ def deploy(config, source, metadata):
     state_file = root / 'state.json'
     state = json.loads(state_file.read_text()) if state_file.exists() else {'successful': []}
     prior = state.get('current')
+    build_args = ['--build-arg', 'ALPINE_MIRROR=' + config['alpine_mirror']] if config.get('alpine_mirror') else []
     print('开始隔离数据库测试和构建。', flush=True)
-    verify_source(source, tag, release / 'verification.log')
+    verify_source(source, tag, release / 'verification.log', build_args)
     with (release / 'build.log').open('w') as output:
-        run(['docker', 'build', '--label', LABEL + '=' + OWNER, '--label', 'org.opencontainers.image.revision=' + metadata['commit'], '-t', image, str(source)], stdout=output)
+        run(['docker', 'build', *build_args, '--label', LABEL + '=' + OWNER, '--label', 'org.opencontainers.image.revision=' + metadata['commit'], '-t', image, str(source)], stdout=output)
     # Retain only executable release control, not another entire copy of source/dependencies.
     write_json(release / 'source.json', metadata)
     if not compose(root, 'ps', '-aq', 'postgres').strip():

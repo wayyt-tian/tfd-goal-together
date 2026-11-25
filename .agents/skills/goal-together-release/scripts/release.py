@@ -62,6 +62,8 @@ def validate_config(config):
         raise ValueError('发布目录必须是独立的绝对目录，例如 /srv/goal-together。')
     if config['keep_images'] < 2 or config['minimum_free_gib'] < 1:
         raise ValueError('至少保留两个发布镜像，并预留一 GiB 磁盘空间。')
+    if config.get('alpine_mirror') and not re.fullmatch(r'https://[a-z0-9.-]+/alpine', config['alpine_mirror']):
+        raise ValueError('软件镜像源必须是 HTTPS 地址，例如 https://mirrors.aliyun.com/alpine。')
     return config
 
 

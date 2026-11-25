@@ -29,23 +29,23 @@
     },
     {
       "path": ".agents/skills/goal-together-release/assets/verify.Dockerfile",
-      "bytes": 290,
-      "sha256": "24d1b536d9acad3799ac8895dd220a3083cd2fdbab3ff0479762e55d5b1fea7c"
+      "bytes": 445,
+      "sha256": "8dd6d8e525f5ecded267b822be71ac43c61cea0f2e4c061cfb1fb7dba5f1154d"
     },
     {
       "path": ".agents/skills/goal-together-release/references/operations.md",
-      "bytes": 5514,
-      "sha256": "5ce79b6dd4bd5c328780105b1673ea0296fa97455284d03f52171a8dd3143b80"
+      "bytes": 5998,
+      "sha256": "252a81650bb2683e803d89ad711eeacfe8773a690cc23b5911f55a5269f5de11"
     },
     {
       "path": ".agents/skills/goal-together-release/scripts/release.py",
-      "bytes": 8030,
-      "sha256": "091fb1618255d1702dcd09ff0038d950c69fb2123f93172d5735c3e2fd514ce2"
+      "bytes": 8255,
+      "sha256": "748864b76034bad63f3249902175038c17ec06720067b86a5b75cb377fef15a3"
     },
     {
       "path": ".agents/skills/goal-together-release/scripts/server.py",
-      "bytes": 16761,
-      "sha256": "bfcebcf166ba199788968798e13c74a799df507b41d842da128f17535c9654d9"
+      "bytes": 16930,
+      "sha256": "5d22cb7a76018612f26abc3f6c138cfee956da7dd3887035fd8e8f6bafea2f76"
     },
     {
       "path": ".agents/skills/goal-together-release/scripts/tls.py",
@@ -79,8 +79,8 @@
     },
     {
       "path": "Dockerfile",
-      "bytes": 605,
-      "sha256": "efa53e10484328ea9d20e2f89ecca8c305168aa29bb61aa193928c670e304c1f"
+      "bytes": 760,
+      "sha256": "428f49943da6e1abcb2bfa943a8b0b569fe498896678735101228c9fcba6a259"
     },
     {
       "path": "README.md",
@@ -169,8 +169,8 @@
     },
     {
       "path": "deploy/production.json",
-      "bytes": 195,
-      "sha256": "82c8f192af37957358d7a55fc9d20c79c3724b9ec79bcd058e52e45816844de9"
+      "bytes": 251,
+      "sha256": "08c37e15b439033241f7735e6d866b541e21da768611e45e091e9122d70c4b9f"
     },
     {
       "path": "docs/00_先读我.md",
@@ -799,8 +799,8 @@
     },
     {
       "path": "tests/test-release.py",
-      "bytes": 10577,
-      "sha256": "ac2fe0242e33f9f4af5a42c4033b01ba467b2cd4d0b69689c82fd720fa93444b"
+      "bytes": 10748,
+      "sha256": "39ffcab185e025d34cfff0c875d44d8561d17077840e708540e3b1d52162721e"
     },
     {
       "path": "tests/test-scale.cjs",
