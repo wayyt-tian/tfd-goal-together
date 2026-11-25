@@ -1,0 +1,1171 @@
+{
+  "说明": "用虚构人员在临时数据目录中实际调用接口生成，响应里的长列表只保留前两项。手机号、姓名都是虚构的；Cookie 与 csrf 需要在运行时由 /api/setup、/api/login 或 /api/session 获得。",
+  "通用约定": {
+    "写操作": "请求体为 JSON（Content-Type: application/json），带 X-CSRF-Token 请求头，且必须同源（不接受跨站请求）。",
+    "写操作返回": "{ ok: true, result, delta? }；请求头带 X-Since=<seq> 时，delta 为调用者从该游标之后能看到的变化。",
+    "实时": "GET /api/stream 为服务器推送（SSE），事件 hello / seq / cheer / presence；收到新 seq 后调用 /api/delta?since=。",
+    "错误": "{ error: \"中文提示\" }；401 未登录，403 无权限或 CSRF 失效，404 不存在或不可见，409 冲突（版本过期、重复、仍被引用），429 登录尝试过多。",
+    "日期": "“今天”取服务器所在时区；示例运行时用 GUOQI_TODAY=2026-12-08 固定业务日期，created_at / at 等时间戳仍是生成时的真实时间。"
+  },
+  "示例": [
+    {
+      "名称": "查询是否已初始化",
+      "身份": "未登录",
+      "请求": {
+        "method": "GET",
+        "path": "/api/session"
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "configured": false,
+          "authenticated": false,
+          "demo": false
+        }
+      }
+    },
+    {
+      "名称": "首次配置公司负责人（只能做一次）",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "POST",
+        "path": "/api/setup",
+        "请求头": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "示例负责人",
+          "phone": "13900000001",
+          "lastFour": "1234"
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "data": {
+            "me": {
+              "id": 1,
+              "name": "示例负责人",
+              "title": "公司负责人",
+              "departmentId": null,
+              "managerId": null
+            },
+            "access": {
+              "role": "admin",
+              "teamIds": [],
+              "directReportIds": [],
+              "managedDepartmentIds": []
+            },
+            "settings": {
+              "openness": "path",
+              "staleDays": 7,
+              "healthLine": 0.05,
+              "watchLine": 0.15
+            },
+            "today": "2026-12-08",
+            "seq": 1,
+            "lastSeenSeq": 0,
+            "onboarded": false,
+            "lastSeenAt": null,
+            "cheersReceived": [],
+            "people": [
+              {
+                "id": 1,
+                "name": "示例负责人",
+                "title": "公司负责人",
+                "departmentId": null,
+                "dept": "公司直属",
+                "managerId": null,
+                "active": true,
+                "admin": true
+              }
+            ],
+            "departments": [
+              {
+                "id": 1,
+                "name": "内容业务",
+                "parentId": null,
+                "managerId": null
+              },
+              {
+                "id": 2,
+                "name": "成片方向",
+                "parentId": 1,
+                "managerId": null
+              },
+              "…另外 19 项省略"
+            ],
+            "goals": [],
+            "demo": false,
+            "demoLive": false,
+            "directoryInitialization": null,
+            "migration": null
+          },
+          "csrf": "<运行时生成>"
+        }
+      }
+    },
+    {
+      "名称": "新建一级部门",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "POST",
+        "path": "/api/departments",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "name": "示例业务部"
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "id": 22
+          }
+        }
+      }
+    },
+    {
+      "名称": "新建成员（手机号 + 身份证后四位作为登录凭据）",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "POST",
+        "path": "/api/users",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "name": "示例成员甲",
+          "phone": "13900000002",
+          "lastFour": "2345",
+          "departmentId": 22,
+          "title": "运营",
+          "managerId": 1
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "id": 2
+          }
+        }
+      }
+    },
+    {
+      "名称": "成员登录（姓名、手机号、后四位三项匹配）",
+      "身份": "示例成员甲",
+      "请求": {
+        "method": "POST",
+        "path": "/api/login",
+        "请求头": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "phone": "13900000002",
+          "name": "示例成员甲",
+          "lastFour": "2345"
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "data": {
+            "me": {
+              "id": 2,
+              "name": "示例成员甲",
+              "title": "运营",
+              "departmentId": 22,
+              "managerId": 1
+            },
+            "access": {
+              "role": "member",
+              "teamIds": [],
+              "directReportIds": [],
+              "managedDepartmentIds": []
+            },
+            "settings": {
+              "openness": "path",
+              "staleDays": 7,
+              "healthLine": 0.05,
+              "watchLine": 0.15
+            },
+            "today": "2026-12-08",
+            "seq": 4,
+            "lastSeenSeq": 0,
+            "onboarded": false,
+            "lastSeenAt": null,
+            "cheersReceived": [],
+            "people": [
+              {
+                "id": 1,
+                "name": "示例负责人",
+                "title": "公司负责人",
+                "departmentId": null,
+                "dept": "公司直属",
+                "managerId": null,
+                "active": true,
+                "admin": true
+              },
+              {
+                "id": 2,
+                "name": "示例成员甲",
+                "title": "运营",
+                "departmentId": 22,
+                "dept": "示例业务部",
+                "managerId": 1,
+                "active": true,
+                "admin": false
+              },
+              "…另外 1 项省略"
+            ],
+            "departments": [
+              {
+                "id": 1,
+                "name": "内容业务",
+                "parentId": null,
+                "managerId": null
+              },
+              {
+                "id": 2,
+                "name": "成片方向",
+                "parentId": 1,
+                "managerId": null
+              },
+              "…另外 20 项省略"
+            ],
+            "goals": [],
+            "demo": false,
+            "demoLive": false
+          },
+          "csrf": "<运行时生成>"
+        }
+      }
+    },
+    {
+      "名称": "公司负责人新建公司目标（数字目标）",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "POST",
+        "path": "/api/goals",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "scope": "company",
+          "kind": "measure",
+          "title": "本月 GMV",
+          "unit": "万元",
+          "target": 100,
+          "startDate": "2026-12-01",
+          "endDate": "2026-12-31",
+          "ownerId": 1,
+          "orgIds": [
+            22
+          ],
+          "note": "口径：已签收订单金额，扣除退款。"
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "id": "g-f4ec6db3-c979-4c0a-895c-c0a8dfd7a3cf",
+            "seq": 5
+          }
+        }
+      }
+    },
+    {
+      "名称": "一次把目标拆给多人（每人一份，可带份额）",
+      "说明": "带 X-Since 请求头时，响应里顺带返回调用者从该游标之后的增量 delta，前端不用再拉一次。",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "POST",
+        "path": "/api/goals/g-f4ec6db3-c979-4c0a-895c-c0a8dfd7a3cf/split",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>",
+          "X-Since": "5"
+        },
+        "body": {
+          "items": [
+            {
+              "ownerId": 2,
+              "title": "抖音商城成交额",
+              "target": 60
+            },
+            {
+              "ownerId": 3,
+              "title": "私域社群成交额",
+              "target": 40,
+              "note": "含社群团购"
+            }
+          ]
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "ids": [
+              "g-4f76546b-6612-4345-9f2b-d2dd6db65160",
+              "g-895f9472-f473-4420-b9eb-44a66cf20a8f"
+            ],
+            "seq": 6
+          },
+          "delta": {
+            "seq": 6,
+            "goals": [
+              {
+                "id": "g-f4ec6db3-c979-4c0a-895c-c0a8dfd7a3cf",
+                "parentId": null,
+                "scope": "company",
+                "kind": "measure",
+                "title": "本月 GMV",
+                "note": "口径：已签收订单金额，扣除退款。",
+                "unit": "万元",
+                "target": 100,
+                "startDate": "2026-12-01",
+                "endDate": "2026-12-31",
+                "ownerId": 1,
+                "memberIds": "[…共 0 项]",
+                "orgIds": "[…共 1 项]",
+                "alignId": null,
+                "createdBy": 1,
+                "createdAt": "2026-11-24T00:41:31.858Z",
+                "updatedAt": "2026-11-24T00:41:31.858Z",
+                "version": 1,
+                "doneAt": null,
+                "sort": 0,
+                "seq": 6,
+                "context": false,
+                "hiddenChildren": 0,
+                "stat": {
+                  "value": 0,
+                  "target": 100,
+                  "completion": 0,
+                  "timeProgress": 0.2581,
+                  "deviation": -0.2581,
+                  "status": "risk",
+                  "signal": null,
+                  "stale": false,
+                  "assigned": 100,
+                  "gap": 0,
+                  "childCount": 2,
+                  "leaf": "{…}",
+                  "lastDate": null,
+                  "ownLast": null,
+                  "updates": 0,
+                  "daysLeft": 23,
+                  "people": 3
+                },
+                "perms": {
+                  "edit": true,
+                  "core": true,
+                  "child": true,
+                  "checkin": true,
+                  "archive": true,
+                  "join": false
+                }
+              },
+              {
+                "id": "g-4f76546b-6612-4345-9f2b-d2dd6db65160",
+                "parentId": "g-f4ec6db3-c979-4c0a-895c-c0a8dfd7a3cf",
+                "scope": "company",
+                "kind": "measure",
+                "title": "抖音商城成交额",
+                "note": "",
+                "unit": "万元",
+                "target": 60,
+                "startDate": "2026-12-01",
+                "endDate": "2026-12-31",
+                "ownerId": 2,
+                "memberIds": "[…共 0 项]",
+                "orgIds": "[…共 1 项]",
+                "alignId": null,
+                "createdBy": 1,
+                "createdAt": "2026-11-24T00:41:31.861Z",
+                "updatedAt": "2026-11-24T00:41:31.861Z",
+                "version": 1,
+                "doneAt": null,
+                "sort": 0,
+                "seq": 6,
+                "context": false,
+                "hiddenChildren": 0,
+                "stat": {
+                  "value": 0,
+                  "target": 60,
+                  "completion": 0,
+                  "timeProgress": 0.2581,
+                  "deviation": -0.2581,
+                  "status": "risk",
+                  "signal": null,
+                  "stale": true,
+                  "assigned": 0,
+                  "gap": 60,
+                  "childCount": 0,
+                  "leaf": "{…}",
+                  "lastDate": null,
+                  "ownLast": null,
+                  "updates": 0,
+                  "daysLeft": 23,
+                  "people": 1
+                },
+                "perms": {
+                  "edit": true,
+                  "core": true,
+                  "child": true,
+                  "checkin": false,
+                  "archive": true,
+                  "join": true
+                }
+              },
+              "…另外 1 项省略"
+            ],
+            "removed": [],
+            "events": [
+              {
+                "seq": 6,
+                "at": "2026-11-24T00:41:31.861Z",
+                "actorId": 1,
+                "type": "goal.split",
+                "goalId": "g-f4ec6db3-c979-4c0a-895c-c0a8dfd7a3cf",
+                "refId": null,
+                "data": {
+                  "title": "本月 GMV",
+                  "count": 2,
+                  "ownerIds": "[…共 2 项]",
+                  "total": 100,
+                  "unit": "万元",
+                  "childIds": "[…共 2 项]"
+                },
+                "cheers": 0,
+                "cheered": false
+              }
+            ],
+            "reload": false
+          }
+        }
+      }
+    },
+    {
+      "名称": "成员记一笔进展（只填这次新增的数字）",
+      "身份": "示例成员甲",
+      "请求": {
+        "method": "POST",
+        "path": "/api/goals/g-4f76546b-6612-4345-9f2b-d2dd6db65160/checkins",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "value": 12.5,
+          "note": "两场直播，新客占一半",
+          "signal": "ok",
+          "date": "2026-12-08"
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "id": "c-a8391d66-24db-4a5b-b9ca-1b04b203a3f5",
+            "seq": 7
+          }
+        }
+      }
+    },
+    {
+      "名称": "成员只留言、标记“需要支持”（不填数字）",
+      "身份": "示例成员甲",
+      "请求": {
+        "method": "POST",
+        "path": "/api/goals/g-4f76546b-6612-4345-9f2b-d2dd6db65160/checkins",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "note": "投放素材不够，想请内容组支援两条",
+          "signal": "help"
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "id": "c-fd5274e9-bcad-49fb-82df-bcaf0b665aac",
+            "seq": 8
+          }
+        }
+      }
+    },
+    {
+      "名称": "成员新建自主目标，并挂靠到自己参与的公司目标",
+      "身份": "示例成员甲",
+      "请求": {
+        "method": "POST",
+        "path": "/api/goals",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "scope": "personal",
+          "kind": "action",
+          "title": "整理直播复盘模板",
+          "alignId": "g-4f76546b-6612-4345-9f2b-d2dd6db65160",
+          "startDate": "2026-12-01",
+          "endDate": "2026-12-31"
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "id": "g-4ca7d4cf-2c05-44a5-8beb-7d0226ba47d0",
+            "seq": 9
+          }
+        }
+      }
+    },
+    {
+      "名称": "在已有目标下面加一个子目标（共创新想法）",
+      "身份": "示例成员甲",
+      "请求": {
+        "method": "POST",
+        "path": "/api/goals",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "parentId": "g-4f76546b-6612-4345-9f2b-d2dd6db65160",
+          "kind": "action",
+          "title": "试一场品牌联名直播"
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "id": "g-cdc63360-978f-4da6-939e-7ee46379339b",
+            "seq": 10
+          }
+        }
+      }
+    },
+    {
+      "名称": "编辑目标（必须带当前 version，防止覆盖别人刚做的修改）",
+      "身份": "示例成员甲",
+      "请求": {
+        "method": "PATCH",
+        "path": "/api/goals/g-4ca7d4cf-2c05-44a5-8beb-7d0226ba47d0",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "title": "整理直播复盘模板（含话术）",
+          "version": 1
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "id": "g-4ca7d4cf-2c05-44a5-8beb-7d0226ba47d0",
+            "seq": 11
+          }
+        }
+      }
+    },
+    {
+      "名称": "版本过期时返回 409",
+      "身份": "示例成员甲",
+      "请求": {
+        "method": "PATCH",
+        "path": "/api/goals/g-4ca7d4cf-2c05-44a5-8beb-7d0226ba47d0",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "title": "再改一次",
+          "version": 1
+        }
+      },
+      "响应": {
+        "status": 409,
+        "body": {
+          "error": "这个目标刚刚被更新过，已为你载入最新内容，请再确认一次。"
+        }
+      }
+    },
+    {
+      "名称": "撤回一条进展（保留原记录，只标记已撤回）",
+      "身份": "示例成员甲",
+      "请求": {
+        "method": "POST",
+        "path": "/api/checkins/c-a8391d66-24db-4a5b-b9ca-1b04b203a3f5/void",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "reason": "数字填错了，重新记"
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "id": "c-a8391d66-24db-4a5b-b9ca-1b04b203a3f5",
+            "seq": 12
+          }
+        }
+      }
+    },
+    {
+      "名称": "看一个目标的详情（拆解、成员贡献、最近进展）",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "GET",
+        "path": "/api/goals/g-f4ec6db3-c979-4c0a-895c-c0a8dfd7a3cf"
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "goal": {
+            "id": "g-f4ec6db3-c979-4c0a-895c-c0a8dfd7a3cf",
+            "parentId": null,
+            "scope": "company",
+            "kind": "measure",
+            "title": "本月 GMV",
+            "note": "口径：已签收订单金额，扣除退款。",
+            "unit": "万元",
+            "target": 100,
+            "startDate": "2026-12-01",
+            "endDate": "2026-12-31",
+            "ownerId": 1,
+            "memberIds": [],
+            "orgIds": [
+              22
+            ],
+            "alignId": null,
+            "createdBy": 1,
+            "createdAt": "2026-11-24T00:41:31.858Z",
+            "updatedAt": "2026-11-24T00:41:31.858Z",
+            "version": 1,
+            "doneAt": null,
+            "sort": 0,
+            "seq": 12,
+            "context": false,
+            "hiddenChildren": 0,
+            "stat": {
+              "value": 0,
+              "target": 100,
+              "completion": 0,
+              "timeProgress": 0.2581,
+              "deviation": -0.2581,
+              "status": "risk",
+              "signal": null,
+              "stale": false,
+              "assigned": 100,
+              "gap": 0,
+              "childCount": 2,
+              "leaf": {
+                "total": 2,
+                "risk": 1,
+                "watch": 0,
+                "done": 0,
+                "help": 1,
+                "stale": 2
+              },
+              "lastDate": "2026-12-08",
+              "ownLast": null,
+              "updates": 0,
+              "daysLeft": 23,
+              "people": 3
+            },
+            "perms": {
+              "edit": true,
+              "core": true,
+              "child": true,
+              "checkin": true,
+              "archive": true,
+              "join": false
+            }
+          },
+          "contributions": [
+            {
+              "userId": 2,
+              "goals": 1,
+              "value": 0,
+              "target": 60,
+              "risk": 0,
+              "help": 0,
+              "stale": 1,
+              "lastDate": null
+            },
+            {
+              "userId": 3,
+              "goals": 1,
+              "value": 0,
+              "target": 40,
+              "risk": 1,
+              "help": 0,
+              "stale": 1,
+              "lastDate": null
+            }
+          ],
+          "aligned": [],
+          "hiddenLeaves": 0
+        }
+      }
+    },
+    {
+      "名称": "增量同步：拿到某个游标之后的变化",
+      "说明": "前端收到 /api/stream 推送的新 seq 后调用；reload=true 时表示需要整体刷新（期间有组织、成员或规则变化，或落后超过 500 个游标）。",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "GET",
+        "path": "/api/delta?since=5"
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "seq": 12,
+          "goals": [
+            {
+              "id": "g-895f9472-f473-4420-b9eb-44a66cf20a8f",
+              "parentId": "g-f4ec6db3-c979-4c0a-895c-c0a8dfd7a3cf",
+              "scope": "company",
+              "kind": "measure",
+              "title": "私域社群成交额",
+              "note": "含社群团购",
+              "unit": "万元",
+              "target": 40,
+              "startDate": "2026-12-01",
+              "endDate": "2026-12-31",
+              "ownerId": 3,
+              "memberIds": [],
+              "orgIds": [
+                22
+              ],
+              "alignId": null,
+              "createdBy": 1,
+              "createdAt": "2026-11-24T00:41:31.861Z",
+              "updatedAt": "2026-11-24T00:41:31.861Z",
+              "version": 1,
+              "doneAt": null,
+              "sort": 1,
+              "seq": 6,
+              "context": false,
+              "hiddenChildren": 0,
+              "stat": {
+                "value": 0,
+                "target": 40,
+                "completion": 0,
+                "timeProgress": 0.2581,
+                "deviation": -0.2581,
+                "status": "risk",
+                "signal": null,
+                "stale": true,
+                "assigned": 0,
+                "gap": 40,
+                "childCount": 0,
+                "leaf": {
+                  "total": 1,
+                  "risk": 1,
+                  "watch": 0,
+                  "done": 0,
+                  "help": 0,
+                  "stale": 1
+                },
+                "lastDate": null,
+                "ownLast": null,
+                "updates": 0,
+                "daysLeft": 23,
+                "people": 1
+              },
+              "perms": {
+                "edit": true,
+                "core": true,
+                "child": true,
+                "checkin": false,
+                "archive": true,
+                "join": true
+              }
+            },
+            {
+              "id": "g-cdc63360-978f-4da6-939e-7ee46379339b",
+              "parentId": "g-4f76546b-6612-4345-9f2b-d2dd6db65160",
+              "scope": "company",
+              "kind": "action",
+              "title": "试一场品牌联名直播",
+              "note": "",
+              "unit": "",
+              "target": null,
+              "startDate": "2026-12-01",
+              "endDate": "2026-12-31",
+              "ownerId": 2,
+              "memberIds": [],
+              "orgIds": [
+                22
+              ],
+              "alignId": null,
+              "createdBy": 2,
+              "createdAt": "2026-11-24T00:41:31.868Z",
+              "updatedAt": "2026-11-24T00:41:31.868Z",
+              "version": 1,
+              "doneAt": null,
+              "sort": 0,
+              "seq": 10,
+              "context": false,
+              "hiddenChildren": 0,
+              "stat": {
+                "value": null,
+                "target": null,
+                "completion": 0,
+                "timeProgress": 0.2581,
+                "deviation": -0.2581,
+                "status": "ok",
+                "signal": null,
+                "stale": true,
+                "assigned": null,
+                "gap": null,
+                "childCount": 0,
+                "leaf": {
+                  "total": 1,
+                  "risk": 0,
+                  "watch": 0,
+                  "done": 0,
+                  "help": 0,
+                  "stale": 1
+                },
+                "lastDate": null,
+                "ownLast": null,
+                "updates": 0,
+                "daysLeft": 23,
+                "people": 1
+              },
+              "perms": {
+                "edit": true,
+                "core": true,
+                "child": true,
+                "checkin": false,
+                "archive": true,
+                "join": true
+              }
+            },
+            "…另外 3 项省略"
+          ],
+          "removed": [],
+          "events": [
+            {
+              "seq": 11,
+              "at": "2026-11-24T00:41:31.870Z",
+              "actorId": 2,
+              "type": "goal.updated",
+              "goalId": "g-4ca7d4cf-2c05-44a5-8beb-7d0226ba47d0",
+              "refId": null,
+              "data": {
+                "title": "整理直播复盘模板（含话术）",
+                "changes": {
+                  "title": "[…共 2 项]"
+                },
+                "unit": "",
+                "ownerIds": "[…共 0 项]"
+              },
+              "cheers": 0,
+              "cheered": false
+            },
+            {
+              "seq": 10,
+              "at": "2026-11-24T00:41:31.868Z",
+              "actorId": 2,
+              "type": "goal.created",
+              "goalId": "g-cdc63360-978f-4da6-939e-7ee46379339b",
+              "refId": null,
+              "data": {
+                "title": "试一场品牌联名直播",
+                "kind": "action",
+                "scope": "company",
+                "target": null,
+                "unit": "",
+                "parentTitle": "抖音商城成交额",
+                "ownerIds": "[…共 1 项]",
+                "simulated": false
+              },
+              "cheers": 0,
+              "cheered": false
+            },
+            "…另外 4 项省略"
+          ],
+          "reload": false
+        }
+      }
+    },
+    {
+      "名称": "动态列表（可按 all/mine/team/help/new 筛选，before 翻页）",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "GET",
+        "path": "/api/events?limit=3&filter=all"
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "items": [
+            {
+              "seq": 11,
+              "at": "2026-11-24T00:41:31.870Z",
+              "actorId": 2,
+              "type": "goal.updated",
+              "goalId": "g-4ca7d4cf-2c05-44a5-8beb-7d0226ba47d0",
+              "refId": null,
+              "data": {
+                "title": "整理直播复盘模板（含话术）",
+                "changes": {
+                  "title": "[…共 2 项]"
+                },
+                "unit": "",
+                "ownerIds": "[…共 0 项]"
+              },
+              "cheers": 0,
+              "cheered": false
+            },
+            {
+              "seq": 10,
+              "at": "2026-11-24T00:41:31.868Z",
+              "actorId": 2,
+              "type": "goal.created",
+              "goalId": "g-cdc63360-978f-4da6-939e-7ee46379339b",
+              "refId": null,
+              "data": {
+                "title": "试一场品牌联名直播",
+                "kind": "action",
+                "scope": "company",
+                "target": null,
+                "unit": "",
+                "parentTitle": "抖音商城成交额",
+                "ownerIds": "[…共 1 项]",
+                "simulated": false
+              },
+              "cheers": 0,
+              "cheered": false
+            },
+            "…另外 1 项省略"
+          ],
+          "next": 9
+        }
+      }
+    },
+    {
+      "名称": "给一条动态点个赞（再点一次取消）",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "POST",
+        "path": "/api/events/11/cheer",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {}
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "seq": 11,
+            "count": 1,
+            "cheered": true,
+            "actorId": 2
+          }
+        }
+      }
+    },
+    {
+      "名称": "调整规则（仅公司负责人）",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "PUT",
+        "path": "/api/settings",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "staleDays": 5
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "openness": "path",
+            "staleDays": 5,
+            "healthLine": 0.05,
+            "watchLine": 0.15
+          }
+        }
+      }
+    },
+    {
+      "名称": "办理离职（停用账号；目标与历史都保留）",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "DELETE",
+        "path": "/api/users/3",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {}
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "id": 3
+          }
+        }
+      }
+    },
+    {
+      "名称": "成员列表（openGoals = 名下未归档目标数，用于提示待交接）",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "GET",
+        "path": "/api/admin/users"
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "users": [
+            {
+              "id": 1,
+              "name": "示例负责人",
+              "title": "公司负责人",
+              "dept": "公司直属",
+              "departmentId": null,
+              "managerId": null,
+              "managerName": "",
+              "role": "owner",
+              "active": true,
+              "phone": "13900000001",
+              "phoneMasked": "139****0001",
+              "loginConfigured": true,
+              "openGoals": 1
+            },
+            {
+              "id": 2,
+              "name": "示例成员甲",
+              "title": "运营",
+              "dept": "示例业务部",
+              "departmentId": 22,
+              "managerId": 1,
+              "managerName": "示例负责人",
+              "role": "member",
+              "active": true,
+              "phone": "13900000002",
+              "phoneMasked": "139****0002",
+              "loginConfigured": true,
+              "openGoals": 3
+            },
+            "…另外 1 项省略"
+          ],
+          "directoryInitialization": null
+        }
+      }
+    },
+    {
+      "名称": "一键交接：把离职成员名下的目标交给在职同事",
+      "身份": "公司负责人",
+      "请求": {
+        "method": "POST",
+        "path": "/api/admin/users/3/handover",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "toId": 2
+        }
+      },
+      "响应": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "result": {
+            "count": 1,
+            "open": 1,
+            "seq": 15
+          }
+        }
+      }
+    },
+    {
+      "名称": "非负责人调用负责人接口返回 403",
+      "身份": "示例成员甲",
+      "请求": {
+        "method": "POST",
+        "path": "/api/admin/users/3/handover",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "<登录响应里的 csrf>"
+        },
+        "body": {
+          "toId": 2
+        }
+      },
+      "响应": {
+        "status": 403,
+        "body": {
+          "error": "只有公司负责人可以管理组织和成员。"
+        }
+      }
+    },
+    {
+      "名称": "CSRF 令牌不对的写操作返回 403",
+      "身份": "示例成员甲",
+      "请求": {
+        "method": "POST",
+        "path": "/api/goals/g-4f76546b-6612-4345-9f2b-d2dd6db65160/checkins",
+        "请求头": {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": "wrong"
+        },
+        "body": {
+          "value": 1
+        }
+      },
+      "响应": {
+        "status": 403,
+        "body": {
+          "error": "登录验证已失效，请刷新后重试。"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,908 @@
+{
+  "packageId": "goal-together-v0.4-formal-20261125",
+  "applicationVersion": "0.3.0",
+  "productName": "锅气家族 · 目标共创台",
+  "date": "2026-11-25",
+  "timezone": "Asia/Shanghai",
+  "runtime": "Node.js >= 22.13，React 19 + Vite 7 + PostgreSQL 16",
+  "basedOn": {
+    "packageId": "guoqi-performance-handoff-20261123",
+    "applicationVersion": "0.2.0",
+    "archive": "锅气家族绩效工作台_研发交付包_2026-11-23.zip"
+  },
+  "hashAlgorithm": "sha256",
+  "files": [
+    {
+      "path": ".dockerignore",
+      "bytes": 116,
+      "sha256": "de0585e9a2f78e65cf56b46db10598192f9f07540e5dc1533814b8edb2aaa045"
+    },
+    {
+      "path": ".env.example",
+      "bytes": 811,
+      "sha256": "8fb516c2a0abe512e8fd0eb719740edaab63bc00e090ed360d2b0b61cd1d127b"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 219,
+      "sha256": "f3f557fb4ebf348e1a6a0b70c33f87450799969aed4693b3d3322329b0148e3d"
+    },
+    {
+      "path": ".impeccable/config.json",
+      "bytes": 1340,
+      "sha256": "08c04b35878a57fee9daee75dec0e0811cb942e44353f2a5936af3e878a2f826"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 4429,
+      "sha256": "d31cf39f743fd36d26cc03cd55d61914c578aa3b867a85b62e7c437a930c0633"
+    },
+    {
+      "path": "Dockerfile",
+      "bytes": 605,
+      "sha256": "efa53e10484328ea9d20e2f89ecca8c305168aa29bb61aa193928c670e304c1f"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2832,
+      "sha256": "b65c37459f5771633063fed4b13a07a397e534d8436fcabaa58ae7ed8d47eb95"
+    },
+    {
+      "path": "assets/brand/README.md",
+      "bytes": 2192,
+      "sha256": "e8f3619726276ba263066f0b5158eaec39193cf3f4f2200cc4e069c8ec9336ea"
+    },
+    {
+      "path": "assets/brand/guoqi-logo-sm.webp",
+      "bytes": 13418,
+      "sha256": "3477f21b4e0e8e9b47cafbb41036b219ec0d6c334ef148c756afa3d43f7ed205"
+    },
+    {
+      "path": "assets/brand/guoqi-logo.webp",
+      "bytes": 152144,
+      "sha256": "c8871d110626824349c1d44bbfb9805e39877d0e2c1ef82f85bb37aa493cc117"
+    },
+    {
+      "path": "assets/brand/guoqi-mark.png",
+      "bytes": 17687,
+      "sha256": "422a62694b8ce1e4efe55881e0b2575bfc3fb36445fb5861ec18f214eb019cf2"
+    },
+    {
+      "path": "assets/brand/ip-cheer.webp",
+      "bytes": 46992,
+      "sha256": "3f7c1894a4a373241bd2b70ff605d5d9626624f3bba2c1b4c3e4ceb5dc1e1f0a"
+    },
+    {
+      "path": "assets/brand/ip-full.webp",
+      "bytes": 63764,
+      "sha256": "e5484009e4787cf0de65bc5cf9c106760ae770970ea2ec4e7b4e8d5e64ecb0bf"
+    },
+    {
+      "path": "assets/brand/ip-happy.webp",
+      "bytes": 51452,
+      "sha256": "d5f3be083738fed6db1ad638a929bc310f3e1a45dc6bfb06de115605ba81cd03"
+    },
+    {
+      "path": "assets/brand/ip-think.webp",
+      "bytes": 45250,
+      "sha256": "bf496b5a54610398896252955809ccf067077343ea720f83f41804cc828511be"
+    },
+    {
+      "path": "assets/brand/ip-thumbs.webp",
+      "bytes": 43428,
+      "sha256": "b5c77cccab765eee3e7779586b5ea4d3c03173a0f7e2edb3276e524d829cca7e"
+    },
+    {
+      "path": "assets/brand/source/guoqi-ip-original.svg",
+      "bytes": 2401315,
+      "sha256": "840234650d88925eab12d2ff1c3393778f761300a76c2f1fd1afca5fd46cda13"
+    },
+    {
+      "path": "assets/brand/source/guoqi-logo-original.png",
+      "bytes": 2118503,
+      "sha256": "270759f3bc44597863b585a6f7989816e4fa08e88215454b557307feca3fecef"
+    },
+    {
+      "path": "assets/directory-template.xlsx",
+      "bytes": 1481,
+      "sha256": "11b2b66c9250c581f9f93abb36e622eec350dce65a0882f354929018cab455fd"
+    },
+    {
+      "path": "assets/fonts/OFL-DM-Sans.txt",
+      "bytes": 4482,
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
+    },
+    {
+      "path": "assets/fonts/dm-sans-latin.woff2",
+      "bytes": 36980,
+      "sha256": "468d56b6b25b05b70190b6c233d773f6f1770e8579827ce022a57f03fa8002fb"
+    },
+    {
+      "path": "assets/licenses/LICENSE-lucide.txt",
+      "bytes": 880,
+      "sha256": "1e7290b35280a048667bbf0ebabac1c7fd52a75300e8b2946ac165715997f2bc"
+    },
+    {
+      "path": "compose.yaml",
+      "bytes": 1292,
+      "sha256": "9d998af438b8005ef04c59ad4567beb2b1604371a49966f48706259df082c082"
+    },
+    {
+      "path": "docs/00_先读我.md",
+      "bytes": 6134,
+      "sha256": "ca2ba9347eb26fef2575db08fbee99c1ef5d7e746787a7f9a90c2b3b5f226644"
+    },
+    {
+      "path": "docs/01_产品与验收.md",
+      "bytes": 6523,
+      "sha256": "2dab1f8b114a2b208419423e8e9509f403a2286313fb010aa07563e329437cb7"
+    },
+    {
+      "path": "docs/02_业务规则与权限.md",
+      "bytes": 8135,
+      "sha256": "15d2017b30199319e691a64ba9afa86664547efde18a0a3c01946cb0d075969d"
+    },
+    {
+      "path": "docs/03_架构与代码地图.md",
+      "bytes": 4081,
+      "sha256": "6e939d3b769b1fe1a3765418d69302c34d8a2bf700620cc82c23dcd8209a4875"
+    },
+    {
+      "path": "docs/04_数据模型与接口.md",
+      "bytes": 8874,
+      "sha256": "379c52481e13710bb4801868a01e4bb1064549e601fd3bf1b24a498d3f3cadd0"
+    },
+    {
+      "path": "docs/05_本地开发与数据续接.md",
+      "bytes": 4967,
+      "sha256": "3377bcaa47bc7891bf079a7ce194f9c3772b4b9a2e70fa820e02023f81ccdb61"
+    },
+    {
+      "path": "docs/06_测试与回归.md",
+      "bytes": 2654,
+      "sha256": "da59e0230fb3a4c790bdb84ad24dcac99369854428cc757d842c53da255f6fc0"
+    },
+    {
+      "path": "docs/07_已知问题与迭代路线.md",
+      "bytes": 4278,
+      "sha256": "2fe87224b21b470fbda8f8bd892882527c0afa50c6124b375c74a8e9c1932d0c"
+    },
+    {
+      "path": "docs/08_设计与品牌规范.md",
+      "bytes": 6156,
+      "sha256": "48984956d8734b3ff051fef28b2a33c2522f8525a971bbde447b3bc76cfd34a8"
+    },
+    {
+      "path": "docs/09_交接给Agent的启动提示词.md",
+      "bytes": 1032,
+      "sha256": "90eb974c4f2297e3c877e93331bf4c0b217d84a28f2981aa91159cbc74699c64"
+    },
+    {
+      "path": "docs/10_来源与版本.md",
+      "bytes": 4041,
+      "sha256": "dc46f24b7a259468cab3cb6a83d5ae944991aec7aadfdbcd5751a671bc1adb66"
+    },
+    {
+      "path": "docs/11_交付验收结果.md",
+      "bytes": 5966,
+      "sha256": "6c6e3043f61ad1079959da8d16f1f4ac322e953006fa00d7887e3959885d5cb8"
+    },
+    {
+      "path": "docs/12_目录重构说明.md",
+      "bytes": 5056,
+      "sha256": "3c9048fff1ab4cd4988aed420bf206b7de65e53b6f089fb2ec3cc0b8319045f7"
+    },
+    {
+      "path": "docs/13_PostgreSQL与React重构.md",
+      "bytes": 6136,
+      "sha256": "e19f5aa51b05e3d2eb6e30c8e0bbdfdf555b3d91ae2bf156fbeb0a74c91eb8a6"
+    },
+    {
+      "path": "docs/14_正式模式与账号管理.md",
+      "bytes": 9867,
+      "sha256": "5e11dc13e148c50d6f3eb4000b8ef3f6811531635d952cba7a90e311f149b39e"
+    },
+    {
+      "path": "docs/examples/README.md",
+      "bytes": 1111,
+      "sha256": "a4c8c1261368fbd7a04c1493c7f8ad8923563b70bd2704d715e4d22661cd3fcd"
+    },
+    {
+      "path": "docs/examples/api-examples.json",
+      "bytes": 34228,
+      "sha256": "bee7f8b6c6d3aa85dd15c913c326ea39f9d450958f0ae70f1581413c0c5fe4a1"
+    },
+    {
+      "path": "docs/examples/schema.sql",
+      "bytes": 4457,
+      "sha256": "2fa65c855c739c6804b0150f2178a2b5893db0990c93bd062842dbef4a5b57d6"
+    },
+    {
+      "path": "docs/references/original/00_先读我.md",
+      "bytes": 8460,
+      "sha256": "8b10ef817c81cbeaeaccee31a561c94aba4b0e5290db023b59cf1e76db61f1ff"
+    },
+    {
+      "path": "docs/references/original/01_产品需求.md",
+      "bytes": 17813,
+      "sha256": "fd875364771c6e0bf08009a5d89831ad828d27502bc1836cc08b67183c2898d1"
+    },
+    {
+      "path": "docs/references/original/02_业务规则.md",
+      "bytes": 14985,
+      "sha256": "b58ce5bb182edcd122418bf14091f80781b30bbc1f10b7a1fd05e72d03a40d93"
+    },
+    {
+      "path": "docs/references/original/04_验收用例.md",
+      "bytes": 24799,
+      "sha256": "629bcd6461501c6b10dbc036bc0e6dafee252e10e5c2ed6a3811fa21065c1abb"
+    },
+    {
+      "path": "docs/references/original/05_待确认事项.md",
+      "bytes": 8264,
+      "sha256": "1bb364585a2e5ea6b2fdac9e43006e394cdf18048ab2023e526c607ea8662469"
+    },
+    {
+      "path": "docs/references/original/旧版_接口清单.md",
+      "bytes": 14091,
+      "sha256": "8a9ed952b5870c224a72eae0cb36646a4f452eadef7c9f9a58f6d9fe354db2ba"
+    },
+    {
+      "path": "docs/references/original/旧版_数据模型.md",
+      "bytes": 14116,
+      "sha256": "d07cf95f96cfa2d1072605ad2a8911c025ba75f96080ebb49db133c8d6f3ac86"
+    },
+    {
+      "path": "docs/references/original/锅气家族目标管理方案.md",
+      "bytes": 25622,
+      "sha256": "e29f333e1839f7db36eb238ffd424cf7ac01e860c1b59eabaa4e105e4ea8edcc"
+    },
+    {
+      "path": "docs/references/v0.2/DESIGN.md",
+      "bytes": 6016,
+      "sha256": "1e5f87b4b3c65048e14d76bcb1c38da947bbbccb5c5c5091a4061d531d5db403"
+    },
+    {
+      "path": "docs/references/v0.2/PRODUCT.md",
+      "bytes": 3641,
+      "sha256": "fe0c7c42d8779021d7de90e30c80942f9e71fc4348b5be74f1dd9b5a0be8dbf3"
+    },
+    {
+      "path": "docs/references/v0.2/README.md",
+      "bytes": 723,
+      "sha256": "a0a2ee514bd1125d738223b13a4e2bceb49c451bf50b1a303c30c177a0e90794"
+    },
+    {
+      "path": "docs/references/v0.2/legacy-v02-demo.json",
+      "bytes": 11021,
+      "sha256": "95c43fdb5ea4403d8c5c09f71570a190a8fe1e43c19fa82a230a7cde3c01371b"
+    },
+    {
+      "path": "docs/references/v0.2/legacy-v02.cjs",
+      "bytes": 1722,
+      "sha256": "881cd80b2b939e01ec56df80399d231a9b34fc2fed4267c65d8150f268149ca0"
+    },
+    {
+      "path": "docs/references/v0.2/工作台设计说明.md",
+      "bytes": 5884,
+      "sha256": "44e304809cc3864927f39dfb5085e25363356ffc6fc5b54dbaa864d0a71ae415"
+    },
+    {
+      "path": "docs/references/v0.2/绩效系统设计审查_50至80人.md",
+      "bytes": 12430,
+      "sha256": "2358993151dea178ab081f30989821bae62fedfbfb530e2895bc67550d66ef93"
+    },
+    {
+      "path": "docs/screenshots/01-登录-演示身份选择.jpg",
+      "bytes": 133508,
+      "sha256": "79f619b608687be47cf85defdb781aa06528e854e58c79634117897d4f9e5498"
+    },
+    {
+      "path": "docs/screenshots/02-我的-公司负责人.jpg",
+      "bytes": 228530,
+      "sha256": "37aebe90ad054aa5a40869b570d8412c7ae6e2ecba03649261e98db10676d696"
+    },
+    {
+      "path": "docs/screenshots/03-我的-新同事首次引导.jpg",
+      "bytes": 187304,
+      "sha256": "44b83df00439c50e49b45b4e51fe4ea56c46018d87fad15fbbaebd88f2fc6450"
+    },
+    {
+      "path": "docs/screenshots/04-我的-一线成员.jpg",
+      "bytes": 169693,
+      "sha256": "f8ea4c7a0d6557516d51fba94968f4ad78946cd8aa6e35f6356fdeeb8ecc2841"
+    },
+    {
+      "path": "docs/screenshots/05-目标地图-公司负责人.jpg",
+      "bytes": 361629,
+      "sha256": "089a3a7c9ab1a4879491af31f16e5e6e427481353209c63b93228686b6fd72b9"
+    },
+    {
+      "path": "docs/screenshots/06-目标页-逐层下探.jpg",
+      "bytes": 238953,
+      "sha256": "1dfa479ccb9a67a59bc46c8ccb00363dd5883aedd9445498c56eec9a360f4f98"
+    },
+    {
+      "path": "docs/screenshots/07-团队-业务负责人.jpg",
+      "bytes": 189205,
+      "sha256": "526f3a7b1e9ebb01f7e19c05292c336dfd17fb4c67b1ad611b21257004e5f1d2"
+    },
+    {
+      "path": "docs/screenshots/08-动态-实时进展.jpg",
+      "bytes": 262222,
+      "sha256": "6f8a074eebad3c0c14acb304e341ad55e2a03101095fd0e350bcc1a7d6659900"
+    },
+    {
+      "path": "docs/screenshots/09-弹层-记一笔.jpg",
+      "bytes": 102862,
+      "sha256": "02ed3e35f1c950e1f267789223a452b7272d5eba71e41812804096209d0b1978"
+    },
+    {
+      "path": "docs/screenshots/10-弹层-新建目标.jpg",
+      "bytes": 117154,
+      "sha256": "027ca8a6bf508ca21cf6b9c557ed2832f836f51b4c8d0b954c179fff01e3a99b"
+    },
+    {
+      "path": "docs/screenshots/11-弹层-拆给成员.jpg",
+      "bytes": 96123,
+      "sha256": "2e49450a3943d3292aeeae950547e1d5f2835414612e0052767f068751fd65c6"
+    },
+    {
+      "path": "docs/screenshots/12-设置-成员与汇报线.jpg",
+      "bytes": 214634,
+      "sha256": "2cd9c2e2093ff21c593192b8b8da53e15742730a374e0d3ca7e50d87ddf14bce"
+    },
+    {
+      "path": "docs/screenshots/13-手机-我的.jpg",
+      "bytes": 224295,
+      "sha256": "843d120c8e6b4879a64c942c2fcc385cec843fecf2671afbe5e6a6f4551dcff4"
+    },
+    {
+      "path": "docs/screenshots/14-手机-记一笔.jpg",
+      "bytes": 146466,
+      "sha256": "b0a4b91272bc79b9620b6f0a570b4732f1f94457c46fc0785fe5e626fc4852e1"
+    },
+    {
+      "path": "docs/screenshots/15-手机-目标地图.jpg",
+      "bytes": 211256,
+      "sha256": "0e43eae1b27c9e4b0f3b9eb577efc7ea5d6608323b9f3aea56644e34d97b775e"
+    },
+    {
+      "path": "docs/screenshots/16-手机-目标页.jpg",
+      "bytes": 192217,
+      "sha256": "dec2339b6a84b64c56bf7c8cbaf8075227751913299a2e5e7b99c0047148d364"
+    },
+    {
+      "path": "docs/screenshots/17-手机-动态.jpg",
+      "bytes": 244892,
+      "sha256": "2fae588fac35d954a607c97f630efc18a4fa148895c5c06ab26bd10d53192c98"
+    },
+    {
+      "path": "docs/screenshots/18-升级后-首页待交接提示.jpg",
+      "bytes": 175515,
+      "sha256": "d7a88540fbfc5844ec58ff025eb21875a96f411cec46307de6ad87a498d77f18"
+    },
+    {
+      "path": "docs/screenshots/19-升级后-已离职成员待交接.jpg",
+      "bytes": 84717,
+      "sha256": "c843680d8116e0e169de45f3868bb8bb9638d1fc05e3d2bd1adc53b28b70bccb"
+    },
+    {
+      "path": "docs/screenshots/20-升级后-选择接手的人.jpg",
+      "bytes": 73366,
+      "sha256": "728ab98dde03e8ec53cee53fb1e518599485664d166ece0cff0d7b7643f213d4"
+    },
+    {
+      "path": "docs/screenshots/21-升级后-数据页迁移说明.jpg",
+      "bytes": 123845,
+      "sha256": "0af4ed3e8714ef37d941e805b4bcfcee387201d3da4391d6e288c9db7d606d78"
+    },
+    {
+      "path": "docs/screenshots/README.md",
+      "bytes": 2077,
+      "sha256": "9cbd75bd9bfb3220446a058a3016ded961aacd34888061948ec1662ce429ded2"
+    },
+    {
+      "path": "docs/validation/formal-20261125/account-mobile.png",
+      "bytes": 102975,
+      "sha256": "ac858038023cd99a02994b4dcb240068eb52d522714a636d19df79cb77dbe013"
+    },
+    {
+      "path": "docs/validation/formal-20261125/backend.log",
+      "bytes": 7849,
+      "sha256": "2122cdb6e3cc5546811a02b110f7699ecf4d099dd733fc7c2357da047a2efc48"
+    },
+    {
+      "path": "docs/validation/formal-20261125/browser.log",
+      "bytes": 1213,
+      "sha256": "b65fe26cf75f19ad70cace07f4ed999a0842d534b9a7bedfbdbe7350df01b32b"
+    },
+    {
+      "path": "docs/validation/formal-20261125/container.log",
+      "bytes": 154,
+      "sha256": "07de1dc3df9a8ef2ff5328ba7028908d606fb65289ef39b4753cbcbbeb10486f"
+    },
+    {
+      "path": "docs/validation/formal-20261125/formal-setup.png",
+      "bytes": 389362,
+      "sha256": "716721fd294459f2d2f0728aa6c1d0f7137791692747cc96529fa4f759904173"
+    },
+    {
+      "path": "docs/validation/formal-20261125/owner-data-mobile.png",
+      "bytes": 188715,
+      "sha256": "9d05f9a26dac43cb821e2c559d94bc8de134850a9401c69401a5108e9bb86a35"
+    },
+    {
+      "path": "docs/validation/formal-20261125/owner-data.png",
+      "bytes": 237959,
+      "sha256": "d2a718078bda90fc1450f4851da3cc4c9674e23f2ce2f2b06e899aeb4f304c57"
+    },
+    {
+      "path": "docs/validation/formal-20261125/result.json",
+      "bytes": 1058,
+      "sha256": "aa26d0bc48f8b9ac622329f1fe074df0551ca0519f2db6699f0ed0d88306a03e"
+    },
+    {
+      "path": "docs/validation/formal-20261125/smoke.log",
+      "bytes": 1630,
+      "sha256": "eed8aae94d988c30b68df74110b9aea44422c2cdbba72596194a37946ea0e594"
+    },
+    {
+      "path": "docs/validation/formal-20261125/system-admin-data.png",
+      "bytes": 192245,
+      "sha256": "5deb50f680ff1332856f4e5fa9c500e4ba5d09515f8e3528f3db76c45c8d8fc1"
+    },
+    {
+      "path": "docs/validation/original-v0.3/app-tests.txt",
+      "bytes": 6035,
+      "sha256": "27f606546274ae0ad14ac6472efe512a726859601248533b0ef5f207223d9062"
+    },
+    {
+      "path": "docs/validation/original-v0.3/demo-check.txt",
+      "bytes": 517,
+      "sha256": "888e744b77a9c560ee8073f60b229951365c679a5926010399838a4dba48989b"
+    },
+    {
+      "path": "docs/validation/original-v0.3/package-checks.json",
+      "bytes": 2146,
+      "sha256": "72c5fd7d4e87d97a0bd31297eaf180d72a18c92238a50a6f09154e5b107c7606"
+    },
+    {
+      "path": "docs/validation/original-v0.3/startup-smoke.txt",
+      "bytes": 729,
+      "sha256": "5d1f8901f4a2e0921aca3d5700faed88c95714b217c4c47bd21d83319978fb18"
+    },
+    {
+      "path": "docs/validation/pg-react-20261125/backend-tests.txt",
+      "bytes": 6395,
+      "sha256": "d9f4e0d0f13102c92ca7ea8ddeacc69f075ca4f1da85453418a9643b207cd035"
+    },
+    {
+      "path": "docs/validation/pg-react-20261125/browser-tests.txt",
+      "bytes": 571,
+      "sha256": "161b7e2b7ef4603f9caec9115bb1bcd3ca49c654a98c56dc6e78fce344dd65e4"
+    },
+    {
+      "path": "docs/validation/pg-react-20261125/container-build.txt",
+      "bytes": 2181,
+      "sha256": "37f0799df3ea7796aa81e216826394a97c108e68c6d7a3757b045addd8a3bf14"
+    },
+    {
+      "path": "docs/validation/pg-react-20261125/container-check.txt",
+      "bytes": 123,
+      "sha256": "986fc74941111da67c8a8919b63892366964967ecf3d34527fe092f4268b19af"
+    },
+    {
+      "path": "docs/validation/pg-react-20261125/contrast-browser.txt",
+      "bytes": 571,
+      "sha256": "65befde4d3de41af8be6ba233d2b80c5566a851591f51435a54f90120c352751"
+    },
+    {
+      "path": "docs/validation/pg-react-20261125/contrast-review.json",
+      "bytes": 355,
+      "sha256": "9ba569933bd10c0b169b29837f9c1bc92983a8d292bbcf261cb07e7889cb9ea4"
+    },
+    {
+      "path": "docs/validation/pg-react-20261125/contrast-tests.txt",
+      "bytes": 6396,
+      "sha256": "6baf9ad9992c7f198f00b0dc0300aa407468899d8a9c0e6dcff40e69fda9c2ee"
+    },
+    {
+      "path": "docs/validation/pg-react-20261125/demo.txt",
+      "bytes": 1363,
+      "sha256": "73e558cf7396ee9bbcc75d0f83caa13707dc53e6a828db0c77ed874a31b55039"
+    },
+    {
+      "path": "docs/validation/pg-react-20261125/live-demo.txt",
+      "bytes": 299,
+      "sha256": "bde2f4b9c061d36a1d2c49647954ad8a74292f971ada0921d9a7dc272a27173c"
+    },
+    {
+      "path": "docs/validation/pg-react-20261125/smoke.txt",
+      "bytes": 1567,
+      "sha256": "6b06ce441df2939361cea50adb7a4f9f295838d0743af94506f960f1a7fd509c"
+    },
+    {
+      "path": "docs/validation/pg-react-20261125/visual-comparison.json",
+      "bytes": 19505,
+      "sha256": "70a5ae7ccc9bc421620da92e2be95a632443cd3fdef735589ccf1838aa2c6f64"
+    },
+    {
+      "path": "docs/validation/refactor-20261125/demo-check.txt",
+      "bytes": 429,
+      "sha256": "9e91d14753094819435dfc0738d6983654c3bb73bdd391dc9d1e2a9b2ea490f9"
+    },
+    {
+      "path": "docs/validation/refactor-20261125/relocated-smoke.txt",
+      "bytes": 633,
+      "sha256": "6bea5389c10c73bea2ec746a8cf645ad9c333a844a191c38acdb2aa81780d67c"
+    },
+    {
+      "path": "docs/validation/refactor-20261125/relocation-checks.json",
+      "bytes": 274,
+      "sha256": "5b105118a68994f509985b10193d428da41c1590cbbb40b52e59de24f9ad64d4"
+    },
+    {
+      "path": "docs/validation/refactor-20261125/structure-checks.json",
+      "bytes": 149,
+      "sha256": "b4a483bdc5fa7960ffb5cb497a4a95263944ba935d94c9a8efef219317e02469"
+    },
+    {
+      "path": "docs/validation/refactor-20261125/tests.txt",
+      "bytes": 5892,
+      "sha256": "6465253a3471c0df3e07fd63179fe0b63a657de0bd9dbd00ec9e6cf9d232d212"
+    },
+    {
+      "path": "docs/产品说明.md",
+      "bytes": 3730,
+      "sha256": "e0043131e63ed61e9c63a7331156c7df2d517c56634b29ecddf97ad0cb27d9fc"
+    },
+    {
+      "path": "docs/开发指南.md",
+      "bytes": 1039,
+      "sha256": "0521ba009fa84b25a4d5b4af24898302082565a36d41a55eafafd08d110dcf10"
+    },
+    {
+      "path": "docs/设计说明.md",
+      "bytes": 6627,
+      "sha256": "f8757a780942dedbfc8fddce048bc1eaaee5172fd30c672013e34a5dc7e39987"
+    },
+    {
+      "path": "infra/postgres/init.sql",
+      "bytes": 72,
+      "sha256": "83556eb11ac91b90226923d9e0e9310001f55ef4cafbdd243b2d76e410ba7b62"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 89661,
+      "sha256": "0474ecadcdaa4d34a4ef7eace2985d777210885ea997b783b79b8030d3242ef3"
+    },
+    {
+      "path": "package.json",
+      "bytes": 1322,
+      "sha256": "91325c415d981bc0ed4143d2372d0123ffc564b19f908327f396ca7162623f99"
+    },
+    {
+      "path": "scripts/import-contacts.cjs",
+      "bytes": 568,
+      "sha256": "f7e83a0b755c0ed5afb19db5722ce387500a14a2ea84d450dad238c12b4e288b"
+    },
+    {
+      "path": "scripts/read-contacts.py",
+      "bytes": 4248,
+      "sha256": "f0478a92c29bb4e1d4193d47f99ab1004a1245b833c8120881bf22334c7410ce"
+    },
+    {
+      "path": "scripts/recover-account.cjs",
+      "bytes": 1800,
+      "sha256": "04be77256583b36cc5231e2d9929dd709c2f5b96fb6a4f5285c7d1772f6663fb"
+    },
+    {
+      "path": "scripts/restore-backup.cjs",
+      "bytes": 3457,
+      "sha256": "adfc9be24afde691c7242f71c0ccafc709629e9e71e2c17463925cb5b1054beb"
+    },
+    {
+      "path": "scripts/setup-db.cjs",
+      "bytes": 968,
+      "sha256": "031b36585e982664b97fc198809a545d07b4f655ddeae774dca397819bdcf234"
+    },
+    {
+      "path": "scripts/start-demo.cjs",
+      "bytes": 4770,
+      "sha256": "c611f69bab63f27368fec30360f262e48ad1838137fa4efa2132ccff631f484c"
+    },
+    {
+      "path": "src/application.cjs",
+      "bytes": 41523,
+      "sha256": "b7f9fd6d9c9cdba1e13dbef1254d0e664a8bf5fdc0c44d8a0abcd7c498bced24"
+    },
+    {
+      "path": "src/db/backup.cjs",
+      "bytes": 2065,
+      "sha256": "0bb1da56aa0f63acb5720cb273e60f6668aa4353da52837aa04b2bfc558d6074"
+    },
+    {
+      "path": "src/db/index.cjs",
+      "bytes": 8906,
+      "sha256": "6ad8f99057659c1c7219b4cd6ddc41f618cf9835b3d35698356c230e9378e105"
+    },
+    {
+      "path": "src/db/migrations/001-initial.sql",
+      "bytes": 4376,
+      "sha256": "f071591cb9200fcebcebf818bf0e27e10add8cad0236e59ba826661bb732b1b6"
+    },
+    {
+      "path": "src/db/migrations/002-formal.sql",
+      "bytes": 1130,
+      "sha256": "fceed8ca8e5dc68745b21d42257899afb7ff78868eb52ab55cc95d574fbfc139"
+    },
+    {
+      "path": "src/lib/accounts.cjs",
+      "bytes": 2156,
+      "sha256": "981281b5f7dd9312e2db2fa4bd0d5895fc755e93e6ae39901b55d4081d80466b"
+    },
+    {
+      "path": "src/lib/demo.cjs",
+      "bytes": 33118,
+      "sha256": "c9b39edf42196e9e50fb742daa6f962530ae83804ddc0105d566bbea1c1c84d8"
+    },
+    {
+      "path": "src/lib/directory.cjs",
+      "bytes": 13728,
+      "sha256": "60fd592e4f2f49c96abb2a3ff73375e678ecefb521d8ba6ce1ec5f0b552d2852"
+    },
+    {
+      "path": "src/lib/goals.cjs",
+      "bytes": 57237,
+      "sha256": "471024548bf1bbb43bf55474da6bb4618579ba29ca0bc12e5aa7ed4267508542"
+    },
+    {
+      "path": "src/lib/management.cjs",
+      "bytes": 11591,
+      "sha256": "61b3c6423457752072c7350676a43a05a8087ce311bae707b349f64bd1c5ba61"
+    },
+    {
+      "path": "src/lib/permissions.cjs",
+      "bytes": 648,
+      "sha256": "1efc4fc9e2a5442a33013455777302979ad9cac3973cac44ef9ba55cdf431fac"
+    },
+    {
+      "path": "src/paths.cjs",
+      "bytes": 402,
+      "sha256": "f7493f0800a6235ddfa1f3c6298e32ae8c6dcf10a45b798c6d9e898b46bfc8e4"
+    },
+    {
+      "path": "src/server.cjs",
+      "bytes": 4277,
+      "sha256": "48e00f9aec45a70ec5fc5909a38e171f15085d163796f162124c80f40c2de4c2"
+    },
+    {
+      "path": "tests/browser/capture.cjs",
+      "bytes": 4823,
+      "sha256": "200c747cc2c4546630be0824790107cf428108b78bcf40f4a4f2c520959ffe7f"
+    },
+    {
+      "path": "tests/browser/compare.cjs",
+      "bytes": 2291,
+      "sha256": "44a0e22cb2f9efcdb77905615b77e1406ed134d955c3ed7e999b0ad5a8400f6a"
+    },
+    {
+      "path": "tests/browser/formal.cjs",
+      "bytes": 9935,
+      "sha256": "79f6bb1a5b702a6e632b43fed8c0750d46fc73325780000b34ecc550a851ba76"
+    },
+    {
+      "path": "tests/browser/workflows.cjs",
+      "bytes": 8839,
+      "sha256": "b793e87d51550d9e2638cc1689ccaa477181eff0ff39561578a89726c35e4854"
+    },
+    {
+      "path": "tests/fixed-clock.cjs",
+      "bytes": 356,
+      "sha256": "5a92cc865f746cfe0c1cc7c6640e8279e917b93e07f8c465e7aab69c3751ca95"
+    },
+    {
+      "path": "tests/fixtures/directory.cjs",
+      "bytes": 973,
+      "sha256": "864e94bd4fb4bf2479cceaa1345252d25b1f913a5a1fa5cd4b0f0e0e268c662a"
+    },
+    {
+      "path": "tests/test-all.cjs",
+      "bytes": 1459,
+      "sha256": "882d6a6fd677416f19ea6b648e6b0d4247509ee684b0169d61356ae6d769b4cd"
+    },
+    {
+      "path": "tests/test-database.cjs",
+      "bytes": 6970,
+      "sha256": "575c25a11d16e0cdf32b92d31915c33af15452503e01e41e3154a95e03f50247"
+    },
+    {
+      "path": "tests/test-formal.cjs",
+      "bytes": 17188,
+      "sha256": "ba1f5753989a11ba35377b350936e2ce7165c32535f338d35f87f52e90384546"
+    },
+    {
+      "path": "tests/test-goals.cjs",
+      "bytes": 22938,
+      "sha256": "ffe98186d12559db49216b1d22f18d286087550f575daa49b7d81525d997dbf8"
+    },
+    {
+      "path": "tests/test-helpers.cjs",
+      "bytes": 6628,
+      "sha256": "b4544f005b3e107698294ddf6150f2e817df8f6adb31a6a5025a299d5384299a"
+    },
+    {
+      "path": "tests/test-import.cjs",
+      "bytes": 12602,
+      "sha256": "0da7a45fbe82a83e8e62fc25f6562221a1abd5459e6d0798e27ca02e1e214faf"
+    },
+    {
+      "path": "tests/test-operations.cjs",
+      "bytes": 6882,
+      "sha256": "6088c271727a47cf99d3aa6448e3476e694f7241402a7112bb666d4a82fb7eca"
+    },
+    {
+      "path": "tests/test-scale.cjs",
+      "bytes": 7727,
+      "sha256": "ca766ca704775cac57fad74c30952c161a053c085f0a3eeca0be7bca60a0e490"
+    },
+    {
+      "path": "tests/test-static.cjs",
+      "bytes": 7411,
+      "sha256": "621d3997ab7ed3a18b90906aa6ef2521354bb9173e7f9d0dec8694439ec51424"
+    },
+    {
+      "path": "tools/check-container.cjs",
+      "bytes": 3167,
+      "sha256": "03b3e070178e20646939ade5c7955b4168d6029dd0310634732293c392c72158"
+    },
+    {
+      "path": "tools/smoke-start.cjs",
+      "bytes": 4803,
+      "sha256": "ea40095bbfd145ef12c0bc7a4e88603484c9f867a2a6cf514d4595b8b245dff2"
+    },
+    {
+      "path": "tools/update-manifest.cjs",
+      "bytes": 1920,
+      "sha256": "f89d06bf662a54ec10a098fac42e16fb2d79115f5fa269992dfbc1d265fc1c40"
+    },
+    {
+      "path": "tools/verify-package.cjs",
+      "bytes": 3122,
+      "sha256": "656ae59b32a8a0a8b6132ec07d2bfb8b17411c5bcb23c6f6d14a1649bb9ed717"
+    },
+    {
+      "path": "vite.config.mjs",
+      "bytes": 476,
+      "sha256": "19e6fb0cb201ff9c56f308548462a2cd036bf18d5d6dddb6bb5c8ace9c06f66c"
+    },
+    {
+      "path": "web/css/app.css",
+      "bytes": 82508,
+      "sha256": "a305306b10ec78b037122902b2933581282b324e9ec46e0fc802721faaa07d8a"
+    },
+    {
+      "path": "web/index.html",
+      "bytes": 872,
+      "sha256": "1c9d2c20ab337e41f7d39a3a883dc41ae4c9b6f1e9c0aa2a173ddc1ca58dd069"
+    },
+    {
+      "path": "web/js/api.js",
+      "bytes": 2500,
+      "sha256": "1d2a7fd48f8e14c8afa74328f871fd1d33cb9d441cef95b31ed7a4e2c7e831fd"
+    },
+    {
+      "path": "web/js/forms.jsx",
+      "bytes": 41776,
+      "sha256": "3d3a9085f0c3bf12fd37f832ae00e6db8b737886d256b9a81d866f00a68fe65c"
+    },
+    {
+      "path": "web/js/icons.jsx",
+      "bytes": 23824,
+      "sha256": "d072eac27b47adbff69e53026b182d2283feb81c9f4ae06997fd71e87be1e8b2"
+    },
+    {
+      "path": "web/js/main.jsx",
+      "bytes": 17690,
+      "sha256": "c0eb91e81ad78ced1a3d95b9a7dbb30d29bba1d95854c54150ea47c989f89775"
+    },
+    {
+      "path": "web/js/modes.jsx",
+      "bytes": 839,
+      "sha256": "f44b01723b8febf375fb4e6d6d2c300090ef364a5ea26583d34823ad9ad6a718"
+    },
+    {
+      "path": "web/js/react-runtime.jsx",
+      "bytes": 4528,
+      "sha256": "4433d6fdc7c5728bd67cf36df31b986fb5fed58cf6c0fefd8abcba96a9c00dc1"
+    },
+    {
+      "path": "web/js/store.js",
+      "bytes": 6677,
+      "sha256": "c12d1e23717d140b92e567e57c28158f40c689a29eb3e7731bb456fe3a2ad9b0"
+    },
+    {
+      "path": "web/js/ui.jsx",
+      "bytes": 13423,
+      "sha256": "d1af126ac3cb905564aa51d7a22986e754cc473db8906e297910a887cf867358"
+    },
+    {
+      "path": "web/js/views/account.jsx",
+      "bytes": 3037,
+      "sha256": "2790662e93def27ea91573e2cd84f4e270ea52fce446e01a3ea74fa11f5aebd3"
+    },
+    {
+      "path": "web/js/views/admin-tools.jsx",
+      "bytes": 13061,
+      "sha256": "280aa969749a60fb3e8d297f2ea3ee0926d086f372045bc090e1c1a3c9e86928"
+    },
+    {
+      "path": "web/js/views/admin.jsx",
+      "bytes": 28734,
+      "sha256": "7389006f27e75baff91aeded0470fd665e4d47ca1973825168eb34d9df94376f"
+    },
+    {
+      "path": "web/js/views/auth.jsx",
+      "bytes": 7656,
+      "sha256": "262d28e850d1731e11796a2e4248d2f0276eb38793d1ec0ce5c05079e187a71e"
+    },
+    {
+      "path": "web/js/views/cards.jsx",
+      "bytes": 13290,
+      "sha256": "898416e654447fb3c2bf08899cc7b115d3f2cb259922cd10feb9a5948e4187a5"
+    },
+    {
+      "path": "web/js/views/feed.jsx",
+      "bytes": 11107,
+      "sha256": "da1a70e8e549286148661e0d0961b59faf2841d6367f9e9f4c54343bf99428c4"
+    },
+    {
+      "path": "web/js/views/goal.jsx",
+      "bytes": 22830,
+      "sha256": "271d8e37e552e538d243a6956be949cacf2ad50913d4bb66fd1f5637676e2184"
+    },
+    {
+      "path": "web/js/views/home.jsx",
+      "bytes": 13671,
+      "sha256": "2dd2f9ec8b063a2d12814c727d6c3f6eeeca4eecd2bd5d98b210b6c5febdbd52"
+    },
+    {
+      "path": "web/js/views/insights.jsx",
+      "bytes": 7835,
+      "sha256": "50b7a8c240bfd680a186391c4e595a39302a3db7717a6bb6c953279df0cb385d"
+    },
+    {
+      "path": "web/js/views/map.jsx",
+      "bytes": 5309,
+      "sha256": "4f65859da6ebdafb692c74999c6c01b065fa857c64709ecf62a0da5a6339d038"
+    },
+    {
+      "path": "web/js/views/person.jsx",
+      "bytes": 5578,
+      "sha256": "939cf59f8a194b19927f8581bff76d574ce57c525770d52f9a01f1784f952546"
+    },
+    {
+      "path": "web/js/views/pulse.jsx",
+      "bytes": 4135,
+      "sha256": "e3807c9223c2f2800a51346667cd84cecf3f1e7ce2912215ad0556d53134dc63"
+    },
+    {
+      "path": "web/js/views/records.jsx",
+      "bytes": 3635,
+      "sha256": "775a7d62d683b853b2085e0aeb7218e1009096765e645e65645e620deb9ff361"
+    },
+    {
+      "path": "web/js/views/team.jsx",
+      "bytes": 8773,
+      "sha256": "e53bc33e374d6d1e36f22019f750e8aa19341ed6bddddd4456957586918db0be"
+    },
+    {
+      "path": "启动演示.command",
+      "bytes": 1109,
+      "sha256": "f17a297bb2ed6317147c50d18efef5fe1c340cb499c8768893b4e2214d6e3821"
+    }
+  ],
+  "layoutRevision": "2026-11-25",
+  "version": "0.4.0"
+}

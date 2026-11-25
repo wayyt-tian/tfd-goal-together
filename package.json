@@ -1,0 +1,37 @@
+{
+  "name": "goal-together",
+  "private": true,
+  "version": "0.4.0",
+  "description": "轻松协同的目标共创台，React + Node.js + PostgreSQL",
+  "scripts": {
+    "start": "node src/server.cjs",
+    "demo": "npm run build && node scripts/start-demo.cjs",
+    "demo:live": "npm run build && node scripts/start-demo.cjs --live",
+    "test": "npm run build && node tests/test-all.cjs",
+    "test:smoke": "npm run build && node tools/smoke-start.cjs",
+    "demo:check": "npm run build && node scripts/start-demo.cjs --check",
+    "package:manifest": "node tools/update-manifest.cjs",
+    "package:check": "node tools/verify-package.cjs",
+    "import:contacts": "node scripts/import-contacts.cjs",
+    "build": "vite build",
+    "dev": "vite",
+    "db:setup": "node scripts/setup-db.cjs",
+    "test:browser": "node tests/browser/workflows.cjs && node tests/browser/formal.cjs",
+    "dev:server": "node scripts/start-demo.cjs --port=4181",
+    "account:recover": "node scripts/recover-account.cjs",
+    "db:restore": "node scripts/restore-backup.cjs"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "dependencies": {
+    "pg": "^8.23.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@vitejs/plugin-react": "^4.7.0",
+    "vite": "^7.3.8"
+  }
+}

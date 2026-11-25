@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-25",
+  "version": "0.4.0",
+  "backend": {
+    "suites": 7,
+    "cases": 67,
+    "passed": true
+  },
+  "browser": {
+    "existing": 7,
+    "formal": 8,
+    "passed": true
+  },
+  "container": {
+    "image": "goal-together-app:local",
+    "dualMode": true,
+    "sessionIsolation": true,
+    "backup": true,
+    "passed": true
+  },
+  "databaseOperations": {
+    "backupBeforeUpgrade": true,
+    "legacyDataPreserved": true,
+    "recoveryToken": true,
+    "restoreToIndependentEmptyDatabase": true,
+    "restorePublicSchema": true,
+    "restartPersistence": true
+  },
+  "lan": {
+    "listen": "0.0.0.0:4180",
+    "address": "192.168.1.32",
+    "formalPath": "/formal/",
+    "demoPath": "/demo/",
+    "formalInitialized": false,
+    "formalDatabase": "goal_together_formal",
+    "setupCredentialFilePermissions": "0600",
+    "httpAndApiVerified": true,
+    "physicalSecondDeviceTested": false
+  },
+  "scope": {
+    "fictionalTestDataOnly": true,
+    "previousDatabaseUnchanged": true,
+    "sqliteMigration": false,
+    "loadTest": false
+  }
+}

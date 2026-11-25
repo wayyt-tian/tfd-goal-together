@@ -1,0 +1,21 @@
+{
+  "geometryChecks": 9,
+  "pages": [
+    "首页",
+    "目标地图",
+    "目标详情"
+  ],
+  "widths": [
+    1366,
+    1440,
+    390
+  ],
+  "layoutChanges": 0,
+  "textColorBefore": "#8B929D",
+  "textColorAfter": "#687180",
+  "contrastRatios": {
+    "FFFFFF": 4.926842605182769,
+    "FFF8F1": 4.6802976300022525,
+    "FFF3E8": 4.513334087365414
+  }
+}

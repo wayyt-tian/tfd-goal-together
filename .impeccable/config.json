@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "web/index.html"
+        ],
+        "createdAt": "2026-11-25T03:18:30.215Z",
+        "reason": "Agent: the reported goal-head::before stripe is an existing top indicator encoding goal status via tone classes, retained under the user requirement to preserve functionality and layout."
+      },
+      {
+        "rule": "pulsing-dot",
+        "value": "*",
+        "files": [
+          "web/index.html"
+        ],
+        "createdAt": "2026-11-25T03:18:30.219Z",
+        "reason": "Agent: the reported new-dot is shown only for actual fresh goal-feed events younger than 8000 ms in web/js/views/goal.jsx, with reduced-motion support; it is a data-driven notification."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "web/css/app.css"
+        ],
+        "createdAt": "2026-11-25T03:24:07.241Z",
+        "reason": "助手复核：goal-head::before 是现有目标状态的顶部色条，由 tone 状态类驱动；ev blockquote 的 3px 左边线用于辨识动态中引用的进展说明或留言。按用户要求保留现有功能布局，两处均作为现有设计例外，仅限本样式文件。"
+      }
+    ]
+  }
+}

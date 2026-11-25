@@ -1,0 +1,70 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  5.751MB
+Step 1/21 : FROM node:24-alpine AS build
+ ---> 06d7adf3e0ef
+Step 2/21 : WORKDIR /app
+ ---> Using cache
+ ---> ae29fbe15262
+Step 3/21 : COPY package.json package-lock.json ./
+ ---> Using cache
+ ---> 5cd242a261f1
+Step 4/21 : RUN npm ci
+ ---> Using cache
+ ---> cab4e86947ac
+Step 5/21 : COPY web ./web
+ ---> Using cache
+ ---> fc616e313a84
+Step 6/21 : COPY vite.config.mjs ./
+ ---> Using cache
+ ---> 5bc3a8889d23
+Step 7/21 : RUN npm run build
+ ---> Using cache
+ ---> 46b69fc033e4
+Step 8/21 : FROM node:24-alpine
+ ---> 06d7adf3e0ef
+Step 9/21 : RUN apk add --no-cache postgresql16-client python3
+ ---> Using cache
+ ---> 72dd371dace3
+Step 10/21 : WORKDIR /app
+ ---> Using cache
+ ---> ec8dd46ca9ce
+Step 11/21 : COPY package.json package-lock.json ./
+ ---> Using cache
+ ---> cc6c54e1d8fe
+Step 12/21 : RUN npm ci --omit=dev && npm cache clean --force
+ ---> Using cache
+ ---> 1d080accc5a5
+Step 13/21 : COPY --from=build /app/web/dist ./web/dist
+ ---> Using cache
+ ---> 06019c15ec11
+Step 14/21 : COPY src ./src
+ ---> 782ea6ca09fd
+Step 15/21 : COPY assets ./assets
+ ---> 900898f43d88
+Step 16/21 : COPY scripts ./scripts
+ ---> 6136ad360371
+Step 17/21 : RUN mkdir -p /data/backups && chown -R node:node /data /app
+ ---> Running in 3d15ef658d17
+ ---> Removed intermediate container 3d15ef658d17
+ ---> d042bd98ae78
+Step 18/21 : USER node
+ ---> Running in 0bb9f75aa586
+ ---> Removed intermediate container 0bb9f75aa586
+ ---> 668051b966c2
+Step 19/21 : ENV HOST=0.0.0.0 PORT=4173 BACKUP_DIR=/data/backups
+ ---> Running in 5e40232e47c6
+ ---> Removed intermediate container 5e40232e47c6
+ ---> ba44b5d46a72
+Step 20/21 : EXPOSE 4173
+ ---> Running in 54ecb501a322
+ ---> Removed intermediate container 54ecb501a322
+ ---> ffbecfd021e9
+Step 21/21 : CMD ["node", "src/server.cjs"]
+ ---> Running in f6b8d7031d21
+ ---> Removed intermediate container f6b8d7031d21
+ ---> dd5fb8d9286b
+Successfully built dd5fb8d9286b
+Successfully tagged goal-together-app:local

@@ -1,0 +1,974 @@
+{
+  "screenshots": 138,
+  "threshold": 0.001,
+  "failures": 0,
+  "maximumChangedRatio": 0.00008652390222799048,
+  "results": [
+    {
+      "name": "1366-0-admin-archived.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-admin-data.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-admin-members.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 3202,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-admin-org.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1689,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-admin-rules.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 926,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-goal-feed.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 3718,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-goal-path.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1507,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-goal-people.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 4690,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-home.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1377,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-map.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1844,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-person.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1943,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-pulse.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 4961,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-records.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-sheet-new.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1377,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-0-team.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 2400,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-1-goal-feed.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 3795,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-1-goal-path.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1053,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-1-goal-people.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 2584,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-1-home.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1377,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-1-map.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1534,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-1-person.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1343,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-1-pulse.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 4926,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-1-records.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-1-sheet-new.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1377,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-1-team.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1590,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-2-goal-feed.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1935,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-2-goal-path.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1898,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-2-goal-people.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-2-home.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1290,
+      "changedRatio": 0.000029509573586661673
+    },
+    {
+      "name": "1366-2-map.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1193,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-2-person.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 3158,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-2-pulse.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 3712,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-2-records.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1184,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-2-sheet-checkin.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1290,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-2-sheet-new.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1290,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-3-goal-feed.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 917,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-3-goal-path.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1028,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-3-goal-people.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-3-home.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1127,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-3-map.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-3-person.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-3-pulse.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1176,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-3-records.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-3-sheet-checkin.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1127,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-3-sheet-new.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 1127,
+      "changedRatio": 0
+    },
+    {
+      "name": "1366-auth.png",
+      "sameSize": true,
+      "width": 1366,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-admin-archived.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-admin-data.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-admin-members.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 3202,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-admin-org.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1689,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-admin-rules.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 926,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-goal-feed.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 3718,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-goal-path.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1507,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-goal-people.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 4690,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-home.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1377,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-map.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1844,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-person.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1943,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-pulse.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 4961,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-records.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-sheet-new.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1377,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-0-team.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 2400,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-1-goal-feed.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 3795,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-1-goal-path.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1053,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-1-goal-people.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 2584,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-1-home.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1377,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-1-map.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1534,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-1-person.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1343,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-1-pulse.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 4926,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-1-records.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-1-sheet-new.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1377,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-1-team.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1590,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-2-goal-feed.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1935,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-2-goal-path.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1898,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-2-goal-people.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-2-home.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1290,
+      "changedRatio": 0.000027993109388458226
+    },
+    {
+      "name": "1440-2-map.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1193,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-2-person.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 3158,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-2-pulse.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 3712,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-2-records.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1184,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-2-sheet-checkin.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1290,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-2-sheet-new.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1290,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-3-goal-feed.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 917,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-3-goal-path.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1028,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-3-goal-people.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-3-home.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1127,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-3-map.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-3-person.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-3-pulse.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1176,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-3-records.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-3-sheet-checkin.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1127,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-3-sheet-new.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 1127,
+      "changedRatio": 0
+    },
+    {
+      "name": "1440-auth.png",
+      "sameSize": true,
+      "width": 1440,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-admin-archived.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-admin-data.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-admin-members.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 3304,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-admin-org.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1727,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-admin-rules.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1065,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-goal-feed.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 3927,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-goal-path.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 2362,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-goal-people.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 5292,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-home.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1986,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-map.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 4007,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-person.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 2237,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-pulse.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 5515,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-records.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-sheet-new.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1986,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-0-team.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 2452,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-1-goal-feed.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 3993,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-1-goal-path.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1338,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-1-goal-people.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 2930,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-1-home.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1701,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-1-map.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 2618,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-1-person.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1427,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-1-pulse.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 5521,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-1-records.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-1-sheet-new.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1701,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-1-team.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1642,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-2-goal-feed.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 2115,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-2-goal-path.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 2059,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-2-goal-people.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1042,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-2-home.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1541,
+      "changedRatio": 0.00008652390222799048
+    },
+    {
+      "name": "390-2-map.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1970,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-2-person.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 3483,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-2-pulse.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 4235,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-2-records.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1541,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-2-sheet-checkin.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1541,
+      "changedRatio": 0.00008652390222799048
+    },
+    {
+      "name": "390-2-sheet-new.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1541,
+      "changedRatio": 0.00008652390222799048
+    },
+    {
+      "name": "390-3-goal-feed.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1137,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-3-goal-path.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1250,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-3-goal-people.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1070,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-3-home.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1422,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-3-map.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1108,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-3-person.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 958,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-3-pulse.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1468,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-3-records.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 900,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-3-sheet-checkin.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1422,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-3-sheet-new.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 1422,
+      "changedRatio": 0
+    },
+    {
+      "name": "390-auth.png",
+      "sameSize": true,
+      "width": 390,
+      "height": 900,
+      "changedRatio": 0
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+
+> goal-together@0.4.0 test:smoke
+> npm run build && node tools/smoke-start.cjs
+
+
+> goal-together@0.4.0 build
+> vite build
+
+vite v7.3.8 building client environment for production...
+transforming...
+
+/fonts/dm-sans-latin.woff2 referenced in /fonts/dm-sans-latin.woff2 didn't resolve at build time, it will remain unchanged to be resolved at runtime
+✓ 51 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                    0.92 kB │ gzip:   0.59 kB
+dist/static/index-D8YnUgvG.css    69.70 kB │ gzip:  14.96 kB
+dist/static/account-DCOlFRJI.js    2.97 kB │ gzip:   1.36 kB
+dist/static/pulse-DjRg8IQ2.js      3.00 kB │ gzip:   1.50 kB
+dist/static/records-COI-0GE1.js    3.26 kB │ gzip:   1.44 kB
+dist/static/person-BlUluTN8.js     4.31 kB │ gzip:   1.71 kB
+dist/static/team-DNvV8TXj.js       6.71 kB │ gzip:   2.71 kB
+dist/static/goal-BD4c4V3Z.js      19.96 kB │ gzip:   6.40 kB
+dist/static/admin-BT64t_Cy.js     36.40 kB │ gzip:  11.15 kB
+dist/static/index-BYUMIYC9.js    358.22 kB │ gzip: 111.18 kB
+✓ built in 637ms
+PASS 正式模式首次启动：未初始化状态正确，18 个静态资源（含 8 张品牌图）可访问，私有文件均不可访问。
+PASS 演示环境可以启动，4 个演示身份都能进入：
+  公司负责人（林远舟）：79 个相关目标，62 位团队成员
+  业务负责人（周以宁）：22 个相关目标，14 位团队成员
+  一线成员（孔令仪）：4 个相关目标，0 位团队成员
+  新同事（杜若）：1 个相关目标，0 位团队成员
+{"node":"v24.18.0","isolatedData":true,"realWorkspaceTouched":false}
