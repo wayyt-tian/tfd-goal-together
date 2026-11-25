@@ -6,11 +6,11 @@
 
 操作者须自行取得服务器 SSH 访问权限；使用自己的 SSH Agent 或 `--identity ~/.ssh/自己的私钥`。第一次连接先向服务器管理员核对主机公钥指纹，然后正常运行 `ssh ubuntu@120.53.31.57` 接受匹配的主机密钥。不要禁用主机密钥校验，也不要把旧开发机的私钥或 known_hosts 当交付依赖。密钥问题只阻塞执行，不通过复制凭据来解决。
 
-本机依赖：Python 3.10+、Git、OpenSSH。目标机为 Ubuntu，需 Docker daemon 权限、Compose（支持 `up --wait`）、Python 3.10+、Nginx、Certbot、systemd 以及当前账户非交互 sudo。目标机需能拉取 `node:24-alpine`、`postgres:16-alpine` 和 npm 包；不需要 GitHub 凭据。变更服务器时复制目标 JSON 后传 `--target`，只放地址、域名、端口和保留策略，不放密码。
+本机依赖：Python 3.10+、Git、OpenSSH、Docker，以及 `node:24-alpine`、`postgres:16-alpine` 基础镜像缓存和依赖下载网络；没有缓存时先在本机拉取。当前服务器架构为 linux/amd64，本地应使用相同架构的 Docker。目标机为 Ubuntu，需 Docker daemon 权限、Compose（支持 `up --wait`）、Python 3.10+、Nginx、Certbot、systemd 以及当前账户非交互 sudo。应用测试和镜像构建全部在本机完成，镜像连同 SHA-256、镜像 ID、源码提交和测试日志上传；服务器不安装依赖或构建镜像，无需 GitHub 凭据。变更服务器时复制目标 JSON 后传 `--target`，只放地址、域名、端口和保留策略，不放密码。
 
 发布前先提交本次代码；普通发布不改正式 Compose。如需变更数据库、数据卷、端口或域名，应先单独评审和实施环境变更，不能靠普通代码发布隐式重建数据库。已有目录、同名容器/卷归属不清时工具停止。
 
-目标配置可选 `alpine_mirror`（HTTPS 软件镜像源，路径为 `/alpine`），通过构建参数同时用于校验和应用镜像，未指定时使用 Alpine 官方源。当前服务器使用 `https://mirrors.aliyun.com/alpine`，避免官方源下载过慢；不更改宿主机或其他项目的配置。Docker Hub 不可达时，可由操作者将可信的官方基础镜像传入服务器 Docker 镜像缓存后重试，应用构建和隔离测试仍在服务器执行。
+目标配置可选 `alpine_mirror`（HTTPS 软件镜像源，路径为 `/alpine`），通过构建参数同时用于本地校验和应用镜像，未指定时使用 Alpine 官方源。当前配置使用 `https://mirrors.aliyun.com/alpine`；不更改宿主机或其他项目的配置。构建失败先查看本机 `.data/releases/<发布号>/` 的日志；上传和切换失败查看服务器发布记录。镜像归档校验或架构不匹配时停止，不自动在服务器重新构建。
 
 ## 目标及持久资源
 

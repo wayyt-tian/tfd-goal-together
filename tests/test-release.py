@@ -2,6 +2,7 @@
 """发布工具的行为验证；临时 Git 仓库及模拟容器，绝不操作正式服务。"""
 import importlib.util
 import io
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -124,7 +125,7 @@ class ReleaseTests(unittest.TestCase):
             (root / 'state.json').write_text(json.dumps(old))
             config = dict(CONFIG, root=str(root))
             metadata = {'commit': 'a' * 40, 'release': 'fixture'}
-            with patch.object(server, 'initialize'), patch.object(server, 'verify_source'), patch.object(server, 'run'), patch.object(server, 'compose', return_value=''), patch.object(server, 'migration_state', side_effect=[['001'], ['001', '002'] if changed else ['001']]), patch.object(server, 'backup', return_value='fixture.dump'), patch.object(server, 'image_env') as select_image, patch.object(server, 'wait_app', side_effect=[None, RuntimeError('HTTPS check failed'), None]), patch.object(server.tls, 'configure'), patch.object(server, 'cleanup') as cleanup:
+            with patch.object(server, 'initialize'), patch.object(server, 'load_artifact'), patch.object(server, 'run'), patch.object(server, 'compose', return_value=''), patch.object(server, 'migration_state', side_effect=[['001'], ['001', '002'] if changed else ['001']]), patch.object(server, 'backup', return_value='fixture.dump'), patch.object(server, 'image_env') as select_image, patch.object(server, 'wait_app', side_effect=[None, RuntimeError('HTTPS check failed'), None]), patch.object(server.tls, 'configure'), patch.object(server, 'cleanup') as cleanup:
                 with self.assertRaises(RuntimeError): server.deploy(config, root, metadata)
                 images = [call.args[1] for call in select_image.call_args_list]
                 self.assertEqual(images, ['goal-together-app:fixture'] if changed else ['goal-together-app:fixture', 'goal-together-app:old'])
@@ -142,18 +143,56 @@ class ReleaseTests(unittest.TestCase):
             root = Path(temporary)
             (root / 'releases').mkdir()
             config = dict(CONFIG, root=str(root))
-            metadata = {'commit': 'a' * 40, 'release': 'fixture'}
+            metadata = {'commit': 'a' * 40, 'release': 'fixture', 'image_id': 'sha256:' + '1' * 64}
+            def command_result(args, **kwargs):
+                return metadata['image_id'] if '{{.Image}}' in args else 'goal-together-app:fixture'
             def failed_cleanup(*args):
                 state = json.loads((root / 'state.json').read_text())
                 receipt = json.loads((root / 'releases/fixture/receipt.json').read_text())
                 self.assertEqual(state['current'], 'goal-together-app:fixture')
                 self.assertEqual(receipt['status'], 'published')
                 raise OSError('docker unavailable during cleanup')
-            with patch.object(server, 'initialize'), patch.object(server, 'verify_source'), patch.object(server, 'run', return_value='goal-together-app:fixture'), patch.object(server, 'compose', return_value=''), patch.object(server, 'migration_state', return_value=['001']), patch.object(server, 'backup', return_value='fixture.dump'), patch.object(server, 'image_env'), patch.object(server, 'wait_app'), patch.object(server.tls, 'configure'), patch.object(server, 'cleanup', side_effect=failed_cleanup):
+            with patch.object(server, 'initialize'), patch.object(server, 'load_artifact'), patch.object(server, 'run', side_effect=command_result) as commands, patch.object(server, 'compose', return_value=''), patch.object(server, 'migration_state', return_value=['001']), patch.object(server, 'backup', return_value='fixture.dump'), patch.object(server, 'image_env'), patch.object(server, 'wait_app'), patch.object(server.tls, 'configure'), patch.object(server, 'cleanup', side_effect=failed_cleanup):
                 server.deploy(config, root, metadata)
+                self.assertFalse(any(call.args[0][:2] == ['docker', 'build'] for call in commands.call_args_list))
             receipt = json.loads((root / 'releases/fixture/receipt.json').read_text())
             self.assertEqual(receipt['status'], 'published')
             self.assertEqual(receipt['cleanup_error'], 'OSError')
+
+    def test_image_checksum_failure_stops_before_docker_load(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'image.tar').write_bytes(b'changed during transfer')
+            metadata = {'build_location': 'local', 'release': 'fixture', 'image': 'goal-together-app:fixture', 'image_archive_sha256': hashlib.sha256(b'original').hexdigest()}
+            with patch.object(server, 'run') as command:
+                with self.assertRaisesRegex(RuntimeError, '归档校验失败'):
+                    server.load_artifact(metadata, root, root)
+                command.assert_not_called()
+
+    def test_import_rejects_image_from_another_commit(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'image.tar').write_bytes(b'fixture image')
+            metadata = {'build_location': 'local', 'release': 'fixture', 'image': 'goal-together-app:fixture', 'image_archive_sha256': hashlib.sha256(b'fixture image').hexdigest(), 'image_id': 'sha256:fixture', 'platform': 'linux/amd64', 'commit': 'expected'}
+            imported = {'Id': 'sha256:fixture', 'Os': 'linux', 'Architecture': 'amd64', 'Config': {'Labels': {server.LABEL: server.OWNER, 'org.opencontainers.image.revision': 'another-commit'}}}
+            with patch.object(server.platform, 'machine', return_value='x86_64'), patch.object(server, 'run', side_effect=['', json.dumps([imported])]):
+                with self.assertRaisesRegex(RuntimeError, '源码提交校验失败'):
+                    server.load_artifact(metadata, root, root)
+
+    def test_deploy_bundle_contains_images_logs_and_init_sql_without_source(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            image = root / 'image.tar'
+            image.write_bytes(b'fixture image')
+            sql = root / 'init.sql'
+            sql.write_text('SELECT 1;')
+            bundle = root / 'release.tar.gz'
+            release.make_bundle(ROOT, 'fixture', CONFIG, {}, bundle, artifacts={'image.tar': image}, init_sql=sql)
+            with tarfile.open(bundle) as archive:
+                names = archive.getnames()
+                self.assertIn('artifacts/image.tar', names)
+                self.assertIn('source/infra/postgres/init.sql', names)
+                self.assertNotIn('source/src/server.cjs', names)
 
 
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""从任意机器通过 SSH 发布已提交的目标共创台代码；本机只需 Python 3、Git 和 OpenSSH。"""
+"""本地构建和验证已提交代码，通过 SSH 上传镜像并发布目标共创台。"""
 import argparse
+import hashlib
 from datetime import datetime, timezone
 import io
 import ipaddress
@@ -13,6 +14,8 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+
+sys.dont_write_bytecode = True
 
 HERE = Path(__file__).resolve().parent
 SKILL = HERE.parent
@@ -29,7 +32,7 @@ with tempfile.TemporaryDirectory(prefix="goal-release-") as temporary:
     raise SystemExit("拒绝不安全的发布归档路径")
    archive.extract(member,root)
  command=[sys.executable,str(root/"control/scripts/server.py"),sys.argv[1],"--config",str(root/"control/target.json")]
- if sys.argv[1]=="deploy":command += ["--source",str(root/"source"),"--metadata",str(root/"control/source.json")]
+ if sys.argv[1]=="deploy":command += ["--source",str(root/"source"),"--metadata",str(root/"control/source.json"),"--artifacts",str(root/"artifacts")]
  if "--renewal-test" in sys.argv[2:]:command += ["--renewal-test"]
  raise SystemExit(subprocess.call(command))
 '''
@@ -90,7 +93,7 @@ def add_bytes(archive, name, content):
     archive.addfile(info, io.BytesIO(content))
 
 
-def make_bundle(project, commit, config, metadata, destination, source=False):
+def make_bundle(project, commit, config, metadata, destination, source=False, artifacts=None, init_sql=None):
     with tarfile.open(destination, 'w:gz') as output:
         for name in ['server.py', 'tls.py']:
             add_bytes(output, 'control/scripts/' + name, (HERE / name).read_bytes())
@@ -98,6 +101,12 @@ def make_bundle(project, commit, config, metadata, destination, source=False):
             add_bytes(output, 'control/assets/' + name, (SKILL / 'assets' / name).read_bytes())
         add_bytes(output, 'control/target.json', json.dumps(config).encode())
         add_bytes(output, 'control/source.json', json.dumps(metadata).encode())
+        for name, file in (artifacts or {}).items():
+            if name not in {'image.tar', 'verification.log', 'build.log'}:
+                raise RuntimeError('不支持的发布产物。')
+            output.add(file, arcname='artifacts/' + name)
+        if init_sql:
+            add_bytes(output, 'source/infra/postgres/init.sql', init_sql.read_bytes())
         if source:
             raw = git(project, 'archive', '--format=tar', commit)
             with tarfile.open(fileobj=io.BytesIO(raw)) as incoming:
@@ -107,6 +116,38 @@ def make_bundle(project, commit, config, metadata, destination, source=False):
                     contents = incoming.extractfile(member) if member.isfile() else None
                     member.name = 'source/' + member.name
                     output.addfile(member, contents)
+
+
+def build_local(project, commit, config, metadata, temporary):
+    from server import verify_source, run, LABEL, OWNER, REPOSITORY
+    temporary = Path(temporary)
+    archive = temporary / 'source.tar.gz'
+    make_bundle(project, commit, config, metadata, archive, source=True)
+    staged = temporary / 'staged'
+    with tarfile.open(archive) as package:
+        package.extractall(staged)  # 仅提取上方经过路径和链接检查的 Git 归档。
+    source = staged / 'source'
+    logs = project / '.data/releases' / metadata['release']
+    logs.mkdir(parents=True, mode=0o700, exist_ok=False)
+    build_args = ['--build-arg', 'ALPINE_MIRROR=' + config['alpine_mirror']] if config.get('alpine_mirror') else []
+    print('开始本地隔离数据库测试。', flush=True)
+    verify_source(source, metadata['release'], logs / 'verification.log', build_args)
+    image = REPOSITORY + ':' + metadata['release']
+    print('测试通过，开始本地构建应用镜像。', flush=True)
+    with (logs / 'build.log').open('w') as output:
+        run(['docker', 'build', *build_args, '--label', LABEL + '=' + OWNER, '--label', 'org.opencontainers.image.revision=' + commit, '-t', image, str(source)], stdout=output)
+    info = json.loads(run(['docker', 'image', 'inspect', image]))[0]
+    image_tar = temporary / 'image.tar'
+    # 同时携带数据库基础镜像，服务器无需联网拉取镜像或安装依赖。
+    run(['docker', 'image', 'save', '-o', str(image_tar), image, 'postgres:16-alpine'])
+    digest = hashlib.sha256()
+    with image_tar.open('rb') as data:
+        for chunk in iter(lambda: data.read(1024 * 1024), b''):
+            digest.update(chunk)
+    metadata.update(build_location='local', image=image, image_id=info['Id'], platform=info['Os'] + '/' + info['Architecture'], image_archive_sha256=digest.hexdigest())
+    (logs / 'source.json').write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n')
+    print('本地构建完成，准备上传镜像。', flush=True)
+    return {'image.tar': image_tar, 'verification.log': logs / 'verification.log', 'build.log': logs / 'build.log'}, source / 'infra/postgres/init.sql'
 
 
 def ssh_command(config, identity=None, known_hosts=None):
@@ -147,7 +188,8 @@ def main():
         raise RuntimeError('发布仅接受干净、已提交的 Git 源码；请先审查并提交本次发布内容。')
     with tempfile.TemporaryDirectory(prefix='goal-release-client-') as temporary:
         bundle = Path(temporary) / 'release.tar.gz'
-        make_bundle(project, commit, config, metadata, bundle, source=args.action == 'deploy')
+        artifacts, init_sql = build_local(project, commit, config, metadata, temporary) if args.action == 'deploy' else (None, None)
+        make_bundle(project, commit, config, metadata, bundle, artifacts=artifacts, init_sql=init_sql)
         command = ssh_command(config, args.identity, args.known_hosts)
         remote = ['python3', '-c', BOOTSTRAP, args.action]
         if args.renewal_test:

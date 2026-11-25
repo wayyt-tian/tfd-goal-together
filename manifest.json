@@ -14,8 +14,8 @@
   "files": [
     {
       "path": ".agents/skills/goal-together-release/SKILL.md",
-      "bytes": 4439,
-      "sha256": "822fbfa785ff5e5379c53cd06d4abde2210f42f15d2d523e27ce239c47621ec5"
+      "bytes": 4905,
+      "sha256": "546961c58a0bcdba0a301b9835c7231960a665b6bfc10c67f24b8f63e8730b8c"
     },
     {
       "path": ".agents/skills/goal-together-release/agents/openai.yaml",
@@ -34,18 +34,18 @@
     },
     {
       "path": ".agents/skills/goal-together-release/references/operations.md",
-      "bytes": 5998,
-      "sha256": "252a81650bb2683e803d89ad711eeacfe8773a690cc23b5911f55a5269f5de11"
+      "bytes": 6305,
+      "sha256": "309ed535917060d142bb545292212ea77bc3d15d721ce918c5609ec6ff573a78"
     },
     {
       "path": ".agents/skills/goal-together-release/scripts/release.py",
-      "bytes": 8255,
-      "sha256": "748864b76034bad63f3249902175038c17ec06720067b86a5b75cb377fef15a3"
+      "bytes": 11012,
+      "sha256": "0aa9f452e1c67837a1d8b6cacaf65ac466574d260a3384f96085373d7b8cdac0"
     },
     {
       "path": ".agents/skills/goal-together-release/scripts/server.py",
-      "bytes": 16930,
-      "sha256": "5d22cb7a76018612f26abc3f6c138cfee956da7dd3887035fd8e8f6bafea2f76"
+      "bytes": 18429,
+      "sha256": "01cd0b550fe022b2804a7d4a463bd96fa77e4e68e7d7738c8a00336b74fbbf85"
     },
     {
       "path": ".agents/skills/goal-together-release/scripts/tls.py",
@@ -74,8 +74,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 4920,
-      "sha256": "324cd2ff44fc068cfd697f0d91145c5f19ab4990f8c0742aac44b8593c2c7049"
+      "bytes": 5070,
+      "sha256": "1864f30f21fa9da2922911db9ac3f6fe0610a23968131ee6d49b146a5d7eb8e5"
     },
     {
       "path": "Dockerfile",
@@ -84,8 +84,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 3373,
-      "sha256": "24ebeff06d60b20beab2ae9db0b4990517519d6e02af0802547584864f43ba1c"
+      "bytes": 3367,
+      "sha256": "b2b1fe68b22bd0b4e5b8f37f5c86255136d2f80e5d6c81e1808b152243a3e51f"
     },
     {
       "path": "assets/brand/README.md",
@@ -249,8 +249,8 @@
     },
     {
       "path": "docs/15_服务器发布.md",
-      "bytes": 2954,
-      "sha256": "7316d20fc4808176531189494cdaa686992ba3db64c016931187b37b91ef3730"
+      "bytes": 3345,
+      "sha256": "4e302bbe77b220d495cad115b131dd5c467567a33e640f54767e1e2b468287bd"
     },
     {
       "path": "docs/examples/README.md",
@@ -799,8 +799,8 @@
     },
     {
       "path": "tests/test-release.py",
-      "bytes": 10748,
-      "sha256": "39ffcab185e025d34cfff0c875d44d8561d17077840e708540e3b1d52162721e"
+      "bytes": 13477,
+      "sha256": "16f913e901366dcd74a0809252174bb428e0759b5c42bdf3b82db5634834d80c"
     },
     {
       "path": "tests/test-scale.cjs",

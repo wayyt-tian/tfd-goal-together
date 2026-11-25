@@ -2,8 +2,10 @@
 """服务器侧发布；仅操作 goal-together 的 Compose、镜像及专用目录。"""
 import argparse
 import fcntl
+import hashlib
 import json
 import os
+import platform
 from pathlib import Path
 import secrets
 import shutil
@@ -203,7 +205,32 @@ def cleanup(root, keep):
     return {'removed_images': removed, 'skipped_images': skipped, 'free_gib': round(shutil.disk_usage(root).free / 1024**3, 2)}
 
 
-def deploy(config, source, metadata):
+def load_artifact(metadata, artifacts, release):
+    if metadata.get('build_location') != 'local' or artifacts is None:
+        raise RuntimeError('只接受本地完成构建和验证的镜像产物。')
+    image = REPOSITORY + ':' + metadata['release']
+    if metadata.get('image') != image:
+        raise RuntimeError('镜像标签与发布号不一致。')
+    image_tar = artifacts / 'image.tar'
+    digest = hashlib.sha256()
+    with image_tar.open('rb') as data:
+        for chunk in iter(lambda: data.read(1024 * 1024), b''):
+            digest.update(chunk)
+    if digest.hexdigest() != metadata.get('image_archive_sha256'):
+        raise RuntimeError('镜像归档校验失败，未导入或切换应用。')
+    architecture = {'x86_64': 'amd64', 'aarch64': 'arm64'}.get(platform.machine(), platform.machine())
+    if metadata.get('platform') != 'linux/' + architecture:
+        raise RuntimeError('本地镜像架构与服务器不一致。')
+    run(['docker', 'image', 'load', '-i', str(image_tar)])
+    info = json.loads(run(['docker', 'image', 'inspect', image]))[0]
+    labels = info.get('Config', {}).get('Labels') or {}
+    if info['Id'] != metadata.get('image_id') or info['Os'] + '/' + info['Architecture'] != metadata['platform'] or labels.get(LABEL) != OWNER or labels.get('org.opencontainers.image.revision') != metadata['commit']:
+        raise RuntimeError('导入镜像的身份、归属或源码提交校验失败。')
+    for name in ['verification.log', 'build.log']:
+        shutil.copy2(artifacts / name, release / name)
+
+
+def deploy(config, source, metadata, artifacts=None):
     root = Path(config['root'])
     initialize(root, config, source)
     tag = metadata['release']
@@ -213,11 +240,8 @@ def deploy(config, source, metadata):
     state_file = root / 'state.json'
     state = json.loads(state_file.read_text()) if state_file.exists() else {'successful': []}
     prior = state.get('current')
-    build_args = ['--build-arg', 'ALPINE_MIRROR=' + config['alpine_mirror']] if config.get('alpine_mirror') else []
-    print('开始隔离数据库测试和构建。', flush=True)
-    verify_source(source, tag, release / 'verification.log', build_args)
-    with (release / 'build.log').open('w') as output:
-        run(['docker', 'build', *build_args, '--label', LABEL + '=' + OWNER, '--label', 'org.opencontainers.image.revision=' + metadata['commit'], '-t', image, str(source)], stdout=output)
+    print('开始校验和导入本地构建镜像，服务器不执行构建。', flush=True)
+    load_artifact(metadata, artifacts, release)
     # Retain only executable release control, not another entire copy of source/dependencies.
     write_json(release / 'source.json', metadata)
     if not compose(root, 'ps', '-aq', 'postgres').strip():
@@ -242,6 +266,8 @@ def deploy(config, source, metadata):
         actual_image = run(['docker', 'inspect', '--format', '{{.Config.Image}}', actual]).strip()
         if actual_image != image:
             raise RuntimeError('运行镜像与发布版本不一致。')
+        if run(['docker', 'inspect', '--format', '{{.Image}}', actual]).strip() != metadata['image_id']:
+            raise RuntimeError('运行镜像 ID 与本地构建产物不一致。')
     except Exception:
         compose(root, 'stop', 'app')
         after = migration_state(root)
@@ -286,6 +312,7 @@ def main():
     parser.add_argument('--config', required=True)
     parser.add_argument('--source')
     parser.add_argument('--metadata')
+    parser.add_argument('--artifacts')
     parser.add_argument('--renewal-test', action='store_true')
     args = parser.parse_args()
     config = json.loads(Path(args.config).read_text())
@@ -308,7 +335,7 @@ def main():
         if args.action == 'cleanup':
             print(json.dumps(cleanup(Path(config['root']), config['keep_images']), ensure_ascii=False))
         else:
-            deploy(config, Path(args.source), json.loads(Path(args.metadata).read_text()))
+            deploy(config, Path(args.source), json.loads(Path(args.metadata).read_text()), Path(args.artifacts))
 
 
 if __name__ == '__main__':
