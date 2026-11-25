@@ -13,6 +13,46 @@
   "hashAlgorithm": "sha256",
   "files": [
     {
+      "path": ".agents/skills/goal-together-release/SKILL.md",
+      "bytes": 4439,
+      "sha256": "822fbfa785ff5e5379c53cd06d4abde2210f42f15d2d523e27ce239c47621ec5"
+    },
+    {
+      "path": ".agents/skills/goal-together-release/agents/openai.yaml",
+      "bytes": 327,
+      "sha256": "9f496622da00a4357a8347a796bbe68df2f3694406549104ee7afdcd7ed7540a"
+    },
+    {
+      "path": ".agents/skills/goal-together-release/assets/compose.yaml",
+      "bytes": 1896,
+      "sha256": "eb40712af94e7af9f15cc0b2bbb7de8cbbb608358876e2d86d2974bda6faa725"
+    },
+    {
+      "path": ".agents/skills/goal-together-release/assets/verify.Dockerfile",
+      "bytes": 290,
+      "sha256": "24d1b536d9acad3799ac8895dd220a3083cd2fdbab3ff0479762e55d5b1fea7c"
+    },
+    {
+      "path": ".agents/skills/goal-together-release/references/operations.md",
+      "bytes": 5514,
+      "sha256": "5ce79b6dd4bd5c328780105b1673ea0296fa97455284d03f52171a8dd3143b80"
+    },
+    {
+      "path": ".agents/skills/goal-together-release/scripts/release.py",
+      "bytes": 8030,
+      "sha256": "091fb1618255d1702dcd09ff0038d950c69fb2123f93172d5735c3e2fd514ce2"
+    },
+    {
+      "path": ".agents/skills/goal-together-release/scripts/server.py",
+      "bytes": 16761,
+      "sha256": "bfcebcf166ba199788968798e13c74a799df507b41d842da128f17535c9654d9"
+    },
+    {
+      "path": ".agents/skills/goal-together-release/scripts/tls.py",
+      "bytes": 6694,
+      "sha256": "afc188865b23fd1957f3b66487d4b32cbfa0002e86d26ec6931f3d27000bf0b2"
+    },
+    {
       "path": ".dockerignore",
       "bytes": 116,
       "sha256": "de0585e9a2f78e65cf56b46db10598192f9f07540e5dc1533814b8edb2aaa045"
@@ -34,8 +74,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 4429,
-      "sha256": "d31cf39f743fd36d26cc03cd55d61914c578aa3b867a85b62e7c437a930c0633"
+      "bytes": 4920,
+      "sha256": "324cd2ff44fc068cfd697f0d91145c5f19ab4990f8c0742aac44b8593c2c7049"
     },
     {
       "path": "Dockerfile",
@@ -44,8 +84,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 2832,
-      "sha256": "b65c37459f5771633063fed4b13a07a397e534d8436fcabaa58ae7ed8d47eb95"
+      "bytes": 3373,
+      "sha256": "24ebeff06d60b20beab2ae9db0b4990517519d6e02af0802547584864f43ba1c"
     },
     {
       "path": "assets/brand/README.md",
@@ -128,9 +168,14 @@
       "sha256": "9d998af438b8005ef04c59ad4567beb2b1604371a49966f48706259df082c082"
     },
     {
+      "path": "deploy/production.json",
+      "bytes": 195,
+      "sha256": "82c8f192af37957358d7a55fc9d20c79c3724b9ec79bcd058e52e45816844de9"
+    },
+    {
       "path": "docs/00_先读我.md",
-      "bytes": 6134,
-      "sha256": "ca2ba9347eb26fef2575db08fbee99c1ef5d7e746787a7f9a90c2b3b5f226644"
+      "bytes": 6278,
+      "sha256": "d2da5cadf8ddf4366349596defa4dd3e91d8e7eefce478f787dd0bb390878c5f"
     },
     {
       "path": "docs/01_产品与验收.md",
@@ -164,8 +209,8 @@
     },
     {
       "path": "docs/07_已知问题与迭代路线.md",
-      "bytes": 4278,
-      "sha256": "2fe87224b21b470fbda8f8bd892882527c0afa50c6124b375c74a8e9c1932d0c"
+      "bytes": 4353,
+      "sha256": "e293affbbe1c2ecb6ceac36d35bb1dae1a734cbdb52b9933e86fe2714db900bb"
     },
     {
       "path": "docs/08_设计与品牌规范.md",
@@ -201,6 +246,11 @@
       "path": "docs/14_正式模式与账号管理.md",
       "bytes": 9867,
       "sha256": "5e11dc13e148c50d6f3eb4000b8ef3f6811531635d952cba7a90e311f149b39e"
+    },
+    {
+      "path": "docs/15_服务器发布.md",
+      "bytes": 2954,
+      "sha256": "7316d20fc4808176531189494cdaa686992ba3db64c016931187b37b91ef3730"
     },
     {
       "path": "docs/examples/README.md",
@@ -553,6 +603,11 @@
       "sha256": "6465253a3471c0df3e07fd63179fe0b63a657de0bd9dbd00ec9e6cf9d232d212"
     },
     {
+      "path": "docs/validation/release-20261125/结果.md",
+      "bytes": 1960,
+      "sha256": "68ba68fc8a414b067126d7d2d253656b06d5da3b6cb6c22d8af9bd5c101487c9"
+    },
+    {
       "path": "docs/产品说明.md",
       "bytes": 3730,
       "sha256": "e0043131e63ed61e9c63a7331156c7df2d517c56634b29ecddf97ad0cb27d9fc"
@@ -741,6 +796,11 @@
       "path": "tests/test-operations.cjs",
       "bytes": 6882,
       "sha256": "6088c271727a47cf99d3aa6448e3476e694f7241402a7112bb666d4a82fb7eca"
+    },
+    {
+      "path": "tests/test-release.py",
+      "bytes": 10577,
+      "sha256": "ac2fe0242e33f9f4af5a42c4033b01ba467b2cd4d0b69689c82fd720fa93444b"
     },
     {
       "path": "tests/test-scale.cjs",

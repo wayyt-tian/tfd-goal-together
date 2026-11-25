@@ -24,6 +24,8 @@ npm run test:smoke
 
 浏览器测试第一次运行前执行 `npx playwright install chromium`。
 
+服务器发布使用仓库自带的 [goal-together-release skill](.agents/skills/goal-together-release/SKILL.md)。换机器克隆后，只需 Python 3.10+、Git、OpenSSH 和操作者自己的服务器访问权限；构建与隔离数据库测试在服务器完成。目标为 `https://goal.tywldx.ltd`，发布成功后默认保留最近三个成功版本并清理本项目历史镜像。HTTPS 与自动续期已配置，应用尚未正式发布。命令、凭据准备与验证范围见 [服务器发布](docs/15_服务器发布.md)。
+
 正式入口为 `/formal/`，演示为 `/demo/`；登录页和头像菜单可切换。默认端口 4173，可通过环境设置 4180。正式库使用 `DATABASE_URL`，从空白开始；手机号和密码登录，首次配置凭证位于本机 `.data/formal/setup-token.json`。`npm run demo` 保持独立虚构演示。**不读取或迁移旧 SQLite 数据**；`GUOQI_DATA_DIR` 现在只控制备份等本地文件，不决定数据库连接。
 
 ```text

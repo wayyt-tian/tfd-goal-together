@@ -1,0 +1,4 @@
+interface:
+  display_name: "目标共创台发布"
+  short_description: "发布目标共创台到指定服务器，完成验证、备份、回滚准备和本项目旧镜像清理"
+  default_prompt: "使用 $goal-together-release 检查并发布当前项目到配置的服务器，验证服务并清理本项目历史镜像。"

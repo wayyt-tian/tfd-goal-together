@@ -1,0 +1,10 @@
+{
+  "host": "120.53.31.57",
+  "user": "ubuntu",
+  "ssh_port": 22,
+  "domain": "goal.tywldx.ltd",
+  "root": "/srv/goal-together",
+  "app_port": 4182,
+  "keep_images": 3,
+  "minimum_free_gib": 4
+}
