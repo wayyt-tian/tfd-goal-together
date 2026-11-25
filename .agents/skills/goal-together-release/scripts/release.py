@@ -63,8 +63,8 @@ def validate_config(config):
     root = PurePosixPath(config['root'])
     if not root.is_absolute() or '..' in root.parts or len(root.parts) < 3:
         raise ValueError('发布目录必须是独立的绝对目录，例如 /srv/goal-together。')
-    if config['keep_images'] < 2 or config['minimum_free_gib'] < 1:
-        raise ValueError('至少保留两个发布镜像，并预留一 GiB 磁盘空间。')
+    if config['keep_images'] < 1 or config['minimum_free_gib'] < 1:
+        raise ValueError('至少保留当前发布镜像，并预留一 GiB 磁盘空间。')
     if config.get('alpine_mirror') and not re.fullmatch(r'https://[a-z0-9.-]+/alpine', config['alpine_mirror']):
         raise ValueError('软件镜像源必须是 HTTPS 地址，例如 https://mirrors.aliyun.com/alpine。')
     return config
@@ -119,7 +119,7 @@ def make_bundle(project, commit, config, metadata, destination, source=False, ar
 
 
 def build_local(project, commit, config, metadata, temporary):
-    from server import verify_source, run, LABEL, OWNER, REPOSITORY
+    from server import verify_source, run, inspect_images, LABEL, OWNER, REPOSITORY
     temporary = Path(temporary)
     archive = temporary / 'source.tar.gz'
     make_bundle(project, commit, config, metadata, archive, source=True)
@@ -136,22 +136,26 @@ def build_local(project, commit, config, metadata, temporary):
     print('测试通过，开始本地构建应用镜像。', flush=True)
     with (logs / 'build.log').open('w') as output:
         run(['docker', 'build', *build_args, '--label', LABEL + '=' + OWNER, '--label', 'org.opencontainers.image.revision=' + commit, '-t', image, str(source)], stdout=output)
-    info = json.loads(run(['docker', 'image', 'inspect', image]))[0]
-    image_tar = temporary / 'image.tar'
+    info = inspect_images([image])[0]
+    # 回滚制品保存在开发机，不能随上传临时目录一起消失。
+    image_tar = logs / 'image.tar'
+    image_tar.touch(mode=0o600, exist_ok=False)
     # 同时携带数据库基础镜像，服务器无需联网拉取镜像或安装依赖。
     run(['docker', 'image', 'save', '-o', str(image_tar), image, 'postgres:16-alpine'])
     digest = hashlib.sha256()
     with image_tar.open('rb') as data:
         for chunk in iter(lambda: data.read(1024 * 1024), b''):
             digest.update(chunk)
-    metadata.update(build_location='local', image=image, image_id=info['Id'], platform=info['Os'] + '/' + info['Architecture'], image_archive_sha256=digest.hexdigest())
+    image_tar.chmod(0o600)
+    metadata.update(build_location='local', image=image, image_id=info['Id'], platform=info['Os'] + '/' + info['Architecture'], image_archive_sha256=digest.hexdigest(), recovery_archive=str(image_tar.relative_to(project)))
     (logs / 'source.json').write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n')
+    (logs / 'source.json').chmod(0o600)
     print('本地构建完成，准备上传镜像。', flush=True)
     return {'image.tar': image_tar, 'verification.log': logs / 'verification.log', 'build.log': logs / 'build.log'}, source / 'infra/postgres/init.sql'
 
 
 def ssh_command(config, identity=None, known_hosts=None):
-    command = ['ssh', '-o', 'BatchMode=yes', '-o', 'StrictHostKeyChecking=yes', '-o', 'ConnectTimeout=15', '-o', 'ServerAliveInterval=20', '-o', 'ServerAliveCountMax=3', '-p', str(config['ssh_port'])]
+    command = ['ssh', '-o', 'BatchMode=yes', '-o', 'PasswordAuthentication=no', '-o', 'KbdInteractiveAuthentication=no', '-o', 'StrictHostKeyChecking=yes', '-o', 'ForwardAgent=no', '-o', 'ClearAllForwardings=yes', '-o', 'ConnectTimeout=15', '-o', 'ServerAliveInterval=20', '-o', 'ServerAliveCountMax=3', '-p', str(config['ssh_port'])]
     if identity:
         command += ['-i', str(Path(identity).expanduser())]
     if known_hosts:

@@ -68,11 +68,13 @@ class ReleaseTests(unittest.TestCase):
     def test_ssh_has_no_developer_identity_or_disabled_host_verification(self):
         args = release.ssh_command(CONFIG)
         self.assertIn('StrictHostKeyChecking=yes', args)
+        for option in ['BatchMode=yes', 'PasswordAuthentication=no', 'KbdInteractiveAuthentication=no', 'ForwardAgent=no', 'ClearAllForwardings=yes']:
+            self.assertIn(option, args)
         self.assertNotIn('-i', args)
         self.assertNotIn('/home/tian', ' '.join(args))
 
     def test_bad_targets_are_rejected(self):
-        for changes in [{'domain': 'goal.test; touch /tmp/pwn'}, {'user': 'ubuntu\nroot'}, {'root': '/srv'}, {'root': '/srv/../etc'}, {'keep_images': 1}, {'alpine_mirror': 'http://mirror.example/alpine'}, {'alpine_mirror': 'https://mirror.example/alpine|x'}, {'alpine_mirror': 'https://user:password@mirror.example/alpine'}]:
+        for changes in [{'domain': 'goal.test; touch /tmp/pwn'}, {'user': 'ubuntu\nroot'}, {'root': '/srv'}, {'root': '/srv/../etc'}, {'keep_images': 0}, {'alpine_mirror': 'http://mirror.example/alpine'}, {'alpine_mirror': 'https://mirror.example/alpine|x'}, {'alpine_mirror': 'https://user:password@mirror.example/alpine'}]:
             with self.assertRaises((ValueError, KeyError)):
                 release.validate_config(dict(CONFIG, **changes))
 
@@ -98,12 +100,77 @@ class ReleaseTests(unittest.TestCase):
                 if args[1:3] == ['ps', '-aq']: return 'stopped\n'
                 if args[1] == 'inspect': return 'in-use-id\n'
                 if args[1:3] == ['image', 'ls']: return 'expired-id\nin-use-id\n'
-                return json.dumps([{'Id': 'expired-id', 'RepoTags': ['goal-together-app:expired'], 'Config': {'Labels': {server.LABEL: server.OWNER}}}, {'Id': 'in-use-id', 'RepoTags': ['goal-together-app:in-use'], 'Config': {'Labels': {server.LABEL: server.OWNER}}}])
+                if '{{.Id}}' in args: return 'expired-id'
+                return '\n'.join(json.dumps(item) for item in [{'Id': 'expired-id', 'RepoTags': ['goal-together-app:expired'], 'Config': {'Labels': {server.LABEL: server.OWNER}}}, {'Id': 'in-use-id', 'RepoTags': ['goal-together-app:in-use'], 'Config': {'Labels': {server.LABEL: server.OWNER}}}])
             with patch.object(server, 'run', side_effect=fake_run), patch.object(server.subprocess, 'run', return_value=Mock(returncode=0)) as mutate:
-                result = server.cleanup(root, 3)
+                result = server.cleanup(root, 1)
                 self.assertEqual(result['removed_images'], ['goal-together-app:expired'])
+                self.assertEqual(result['recovery_archive_pending'], ['goal-together-app:old'])
                 self.assertEqual(mutate.call_args.args[0], ['docker', 'image', 'rm', 'goal-together-app:expired'])
-            with self.assertRaises(RuntimeError): server.cleanup(root, 1)
+            with self.assertRaises(RuntimeError): server.cleanup(root, 0)
+
+    def test_cleanup_after_rollback_releases_archived_previous_but_protects_races(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            old = 'goal-together-app:old'
+            # 历史最后一项不是 current，模拟人工回退后的状态。
+            (root / 'state.json').write_text(json.dumps({'current': 'goal-together-app:new', 'previous': old, 'successful': [{'image': 'goal-together-app:new'}, {'image': old, 'recovery_archive': '.data/releases/old/image.tar', 'image_archive_sha256': 'a' * 64}]}))
+            for raced in ['none', 'reference', 'retag']:
+                inventories = iter(['', 'created-after-plan' if raced == 'reference' else ''])
+                def fake_run(args, **kwargs):
+                    if args[1:3] == ['ps', '-aq']: return next(inventories)
+                    if args[1] == 'inspect': return 'old-id'
+                    if args[1:3] == ['image', 'ls']: return 'old-id'
+                    if '{{.Id}}' in args: return 'new-id' if raced == 'retag' else 'old-id'
+                    return json.dumps({'Id': 'old-id', 'RepoTags': [old], 'Config': {'Labels': {server.LABEL: server.OWNER}}})
+                with patch.object(server, 'run', side_effect=fake_run), patch.object(server.subprocess, 'run', return_value=Mock(returncode=0)) as mutate:
+                    result = server.cleanup(root, 1)
+                    self.assertEqual(result['recovery_archive_pending'], [])
+                    self.assertEqual(result['removed_images'], [old] if raced == 'none' else [])
+                    self.assertEqual(result['skipped_images'], [] if raced == 'none' else [old])
+                    self.assertEqual(mutate.call_count, 1 if raced == 'none' else 0)
+
+    def test_independent_cleanup_requires_running_recorded_version_and_both_origins(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'state.json').write_text(json.dumps({'current': 'goal-together-app:current'}))
+            config = dict(CONFIG, root=str(root))
+            for status, image in [('exited', 'current'), ('running', 'candidate'), ('running', 'current')]:
+                with patch.object(server, 'compose', return_value='app-id'), patch.object(server, 'run', side_effect=[status, 'goal-together-app:' + image]), patch.object(server, 'wait_app') as verify:
+                    if status == 'running' and image == 'current':
+                        server.verify_cleanup_ready(config)
+                        self.assertEqual(verify.call_count, 2)
+                        self.assertEqual(verify.call_args_list[0].args, (config,))
+                        self.assertEqual(verify.call_args_list[1].kwargs, {'public': True})
+                    else:
+                        with self.assertRaises(RuntimeError):
+                            server.verify_cleanup_ready(config)
+                        verify.assert_not_called()
+
+    def test_local_image_archive_survives_transfer_temporary_directory(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            project = Path(temporary)
+            subprocess.run(['git', 'init', '-q', str(project)], check=True)
+            (project / 'infra/postgres').mkdir(parents=True)
+            (project / 'infra/postgres/init.sql').write_text('SELECT 1;')
+            subprocess.run(['git', '-C', str(project), 'add', '.'], check=True)
+            subprocess.run(['git', '-C', str(project), '-c', 'user.name=测试', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'fixture'], check=True)
+            commit = release.git(project, 'rev-parse', 'HEAD').decode().strip()
+            metadata = {'release': 'fixture', 'commit': commit}
+            def fake_run(args, **kwargs):
+                if args[1:3] == ['image', 'save']:
+                    Path(args[args.index('-o') + 1]).write_bytes(b'recoverable-image')
+                if args[1:3] == ['image', 'inspect']:
+                    return json.dumps({'Id': 'sha256:fixture', 'Os': 'linux', 'Architecture': 'amd64'})
+                return ''
+            with tempfile.TemporaryDirectory() as transfer, patch.object(server, 'verify_source'), patch.object(server, 'run', side_effect=fake_run):
+                artifacts, _ = release.build_local(project, commit, CONFIG, metadata, transfer)
+                saved = artifacts['image.tar']
+            self.assertEqual(saved.read_bytes(), b'recoverable-image')
+            self.assertEqual(saved.stat().st_mode & 0o777, 0o600)
+            self.assertEqual(project / metadata['recovery_archive'], saved)
+            self.assertEqual(metadata['image_archive_sha256'], hashlib.sha256(saved.read_bytes()).hexdigest())
+            self.assertEqual(json.loads((saved.parent / 'source.json').read_text()), metadata)
 
     def test_nginx_holding_page_and_scoped_renewal_hook(self):
         content = tls.render_site(CONFIG['domain'], CONFIG['app_port'], tls=True)
@@ -125,7 +192,7 @@ class ReleaseTests(unittest.TestCase):
             (root / 'state.json').write_text(json.dumps(old))
             config = dict(CONFIG, root=str(root))
             metadata = {'commit': 'a' * 40, 'release': 'fixture'}
-            with patch.object(server, 'initialize'), patch.object(server, 'load_artifact'), patch.object(server, 'run'), patch.object(server, 'compose', return_value=''), patch.object(server, 'migration_state', side_effect=[['001'], ['001', '002'] if changed else ['001']]), patch.object(server, 'backup', return_value='fixture.dump'), patch.object(server, 'image_env') as select_image, patch.object(server, 'wait_app', side_effect=[None, RuntimeError('HTTPS check failed'), None]), patch.object(server.tls, 'configure'), patch.object(server, 'cleanup') as cleanup:
+            with patch.object(server, 'initialize'), patch.object(server, 'load_artifact'), patch.object(server, 'run'), patch.object(server, 'compose', return_value=''), patch.object(server, 'migration_state', side_effect=[['001'], ['001', '002'] if changed else ['001']]), patch.object(server, 'backup', return_value='fixture.dump'), patch.object(server, 'image_env') as select_image, patch.object(server, 'wait_app', side_effect=[None, RuntimeError('HTTPS check failed'), None, None]), patch.object(server.tls, 'configure'), patch.object(server, 'cleanup') as cleanup:
                 with self.assertRaises(RuntimeError): server.deploy(config, root, metadata)
                 images = [call.args[1] for call in select_image.call_args_list]
                 self.assertEqual(images, ['goal-together-app:fixture'] if changed else ['goal-together-app:fixture', 'goal-together-app:old'])
@@ -175,7 +242,7 @@ class ReleaseTests(unittest.TestCase):
             (root / 'image.tar').write_bytes(b'fixture image')
             metadata = {'build_location': 'local', 'release': 'fixture', 'image': 'goal-together-app:fixture', 'image_archive_sha256': hashlib.sha256(b'fixture image').hexdigest(), 'image_id': 'sha256:fixture', 'platform': 'linux/amd64', 'commit': 'expected'}
             imported = {'Id': 'sha256:fixture', 'Os': 'linux', 'Architecture': 'amd64', 'Config': {'Labels': {server.LABEL: server.OWNER, 'org.opencontainers.image.revision': 'another-commit'}}}
-            with patch.object(server.platform, 'machine', return_value='x86_64'), patch.object(server, 'run', side_effect=['', json.dumps([imported])]):
+            with patch.object(server.platform, 'machine', return_value='x86_64'), patch.object(server, 'run', side_effect=['', json.dumps(imported)]):
                 with self.assertRaisesRegex(RuntimeError, '源码提交校验失败'):
                     server.load_artifact(metadata, root, root)
 

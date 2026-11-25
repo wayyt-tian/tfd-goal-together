@@ -23,6 +23,7 @@ OWNER = 'goal-together-release'
 LABEL = 'ltd.tywldx.goal-together.owner'
 REPOSITORY = 'goal-together-app'
 ASSETS = HERE.parent / 'assets'
+IMAGE_FIELDS = '{"Id":{{json .Id}},"RepoTags":{{json .RepoTags}},"Os":{{json .Os}},"Architecture":{{json .Architecture}},"Config":{"Labels":{{json (index .Config "Labels")}}}}'
 
 
 def run(args, capture=True, env=None, stdout=None):
@@ -38,6 +39,12 @@ def write_json(path, value):
     temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
     temporary.chmod(0o600)
     temporary.replace(path)
+
+
+def inspect_images(references):
+    """只读取镜像身份与标签，不收集镜像中的完整环境。"""
+    output = run(['docker', 'image', 'inspect', '--format', IMAGE_FIELDS, *references])
+    return [json.loads(line) for line in output.splitlines() if line.strip()]
 
 
 def owned_root(root, create=False):
@@ -188,21 +195,51 @@ def cleanup_plan(images, container_image_ids, keep_refs):
 
 
 def cleanup(root, keep):
-    if keep < 2:
-        raise RuntimeError('至少保留当前和上一成功版本。')
+    if keep < 1:
+        raise RuntimeError('至少保留当前成功版本。')
     state = json.loads((root / 'state.json').read_text())
-    keep_refs = {item['image'] for item in state.get('successful', [])[-keep:]}
-    keep_refs.update(filter(None, [state.get('current'), state.get('previous')]))
+    if not state.get('current'):
+        raise RuntimeError('没有当前成功版本记录，拒绝清理。')
+    keep_refs = {state['current']}
+    # 人工回退后，历史记录最后一项可能不是当前版。
+    history = list(dict.fromkeys(item['image'] for item in reversed(state.get('successful', [])) if item['image'] != state['current']))
+    keep_refs.update(history[:keep - 1])
+    # 旧版工具未在站外保留归档，不能仅凭修改保留数量丢掉唯一回退材料。
+    previous = state.get('previous')
+    archived = {item['image'] for item in state.get('successful', []) if item.get('recovery_archive') and item.get('image_archive_sha256')}
+    recovery_pending = [previous] if previous and previous not in archived else []
+    keep_refs.update(recovery_pending)
     ids = run(['docker', 'ps', '-aq']).split()
     used = set(run(['docker', 'inspect', '--format', '{{.Image}}', *ids]).splitlines()) if ids else set()
     image_ids = run(['docker', 'image', 'ls', '-q', '--filter', 'label=' + LABEL + '=' + OWNER]).split()
-    images = json.loads(run(['docker', 'image', 'inspect', *sorted(set(image_ids))])) if image_ids else []
+    images = inspect_images(sorted(set(image_ids))) if image_ids else []
     removed, skipped = [], []
     for tag in cleanup_plan(images, used, keep_refs):
-        # No force: a container created after inventory still prevents image removal.
+        # 容器可能在清单生成后创建。即使只是删除别名，也保护其全部引用。
+        ids = run(['docker', 'ps', '-aq']).split()
+        live_refs = set(run(['docker', 'inspect', '--format', '{{.Image}}', *ids]).splitlines()) if ids else set()
+        image_id = run(['docker', 'image', 'inspect', '--format', '{{.Id}}', tag]).strip()
+        planned_ids = {item['Id'] for item in images if tag in (item.get('RepoTags') or [])}
+        if image_id not in planned_ids or image_id in live_refs:
+            skipped.append(tag)
+            continue
+        # 禁止强删；其他工具的并发活动仍需在流程层协调。
         result = subprocess.run(['docker', 'image', 'rm', tag], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         (removed if result.returncode == 0 else skipped).append(tag)
-    return {'removed_images': removed, 'skipped_images': skipped, 'free_gib': round(shutil.disk_usage(root).free / 1024**3, 2)}
+    return {'removed_images': removed, 'skipped_images': skipped, 'recovery_archive_pending': recovery_pending, 'free_gib': round(shutil.disk_usage(root).free / 1024**3, 2)}
+
+
+def verify_cleanup_ready(config):
+    """独立清理不能将失败发布或人工切换期间的候选当作垃圾。"""
+    root = Path(config['root'])
+    state = json.loads((root / 'state.json').read_text())
+    container = compose(root, 'ps', '-q', 'app').strip()
+    if not container or run(['docker', 'inspect', '--format', '{{.State.Status}}', container]).strip() != 'running':
+        raise RuntimeError('当前应用未运行，拒绝清理；先核对是否正在发布或故障恢复。')
+    if run(['docker', 'inspect', '--format', '{{.Config.Image}}', container]).strip() != state.get('current'):
+        raise RuntimeError('运行镜像与成功记录不一致，拒绝清理。')
+    wait_app(config)
+    wait_app(config, public=True)
 
 
 def load_artifact(metadata, artifacts, release):
@@ -222,7 +259,7 @@ def load_artifact(metadata, artifacts, release):
     if metadata.get('platform') != 'linux/' + architecture:
         raise RuntimeError('本地镜像架构与服务器不一致。')
     run(['docker', 'image', 'load', '-i', str(image_tar)])
-    info = json.loads(run(['docker', 'image', 'inspect', image]))[0]
+    info = inspect_images([image])[0]
     labels = info.get('Config', {}).get('Labels') or {}
     if info['Id'] != metadata.get('image_id') or info['Os'] + '/' + info['Architecture'] != metadata['platform'] or labels.get(LABEL) != OWNER or labels.get('org.opencontainers.image.revision') != metadata['commit']:
         raise RuntimeError('导入镜像的身份、归属或源码提交校验失败。')
@@ -275,6 +312,7 @@ def deploy(config, source, metadata, artifacts=None):
             image_env(root, prior)
             compose(root, 'up', '-d', '--no-deps', 'app')
             wait_app(config)
+            wait_app(config, public=True)
             print('发布失败，数据库迁移版本未变，已恢复上一镜像。', file=sys.stderr)
         else:
             print('发布失败；缺少上一版本或数据库迁移已变化，未自动回退数据库。保留镜像和备份：' + backup_name, file=sys.stderr)
@@ -333,6 +371,7 @@ def main():
         except BlockingIOError:
             raise RuntimeError('另一个发布或清理正在执行。')
         if args.action == 'cleanup':
+            verify_cleanup_ready(config)
             print(json.dumps(cleanup(Path(config['root']), config['keep_images']), ensure_ascii=False))
         else:
             deploy(config, Path(args.source), json.loads(Path(args.metadata).read_text()), Path(args.artifacts))

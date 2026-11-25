@@ -5,7 +5,7 @@
   "domain": "goal.tywldx.ltd",
   "root": "/srv/goal-together",
   "app_port": 4182,
-  "keep_images": 3,
+  "keep_images": 1,
   "minimum_free_gib": 4,
   "alpine_mirror": "https://mirrors.aliyun.com/alpine"
 }
